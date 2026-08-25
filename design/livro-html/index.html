@@ -139,26 +139,52 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center;
     padding:6rem 1.2rem 4rem;
-    background:
-      radial-gradient(ellipse at 50% 18%, rgba(124,31,38,.35), transparent 55%),
-      radial-gradient(ellipse at 50% 100%, rgba(185,138,61,.14), transparent 60%),
-      var(--stage);
+    background:var(--stage);
     overflow:hidden;
+    isolation:isolate;
+  }
+  .hero__vignette{
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 0%, rgba(0,0,0,0) 0%, rgba(20,16,14,.7) 72%, var(--stage) 100%);
+  }
+  .hero__spotlight{
+    position:absolute; left:50%; top:-12%; width:130vw; max-width:1400px; aspect-ratio:1/1;
+    transform:translateX(-50%); z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 40% 46% at 50% 8%, rgba(224,181,99,.24), transparent 62%),
+      radial-gradient(ellipse 60% 40% at 50% 4%, rgba(124,31,38,.30), transparent 68%);
+  }
+  .hero__scraps{position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;}
+  .headline-scrap{
+    position:absolute; font-family:"Space Mono",monospace; font-weight:700;
+    text-transform:uppercase; color:#cdbfa0; opacity:.4; white-space:nowrap;
+    letter-spacing:.06em; filter:blur(.2px);
+    background:linear-gradient(180deg, rgba(241,234,216,.06), transparent);
+    padding:.15em .4em; border-top:1px solid rgba(241,234,216,.15); border-bottom:1px solid rgba(0,0,0,.3);
   }
   .hero__curtain{
-    position:absolute; top:0; bottom:0; width:14%; min-width:70px; max-width:190px;
+    position:absolute; top:0; bottom:0; width:16%; min-width:74px; max-width:210px; z-index:2;
     background:
-      repeating-linear-gradient(90deg, var(--curtain-deep) 0 8px, var(--curtain) 8px 16px);
-    box-shadow:inset -18px 0 30px rgba(0,0,0,.55);
-    opacity:.9;
+      repeating-linear-gradient(90deg,
+        rgba(0,0,0,.35) 0 3px, var(--curtain-deep) 3px 13px, var(--curtain-2) 13px 19px, var(--curtain) 19px 26px);
+    box-shadow:inset -22px 0 40px rgba(0,0,0,.6), inset 3px 0 10px rgba(255,190,120,.08);
   }
+  .hero__curtain::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 14% at 50% 0%, rgba(0,0,0,.55), transparent 70%),
+      repeating-radial-gradient(ellipse 140% 30% at 50% -10%, rgba(0,0,0,0) 0 22px, rgba(0,0,0,.18) 22px 26px);
+    mix-blend-mode:multiply;
+  }
+  .hero__curtain .tassel{position:absolute; bottom:6%; left:50%; transform:translateX(-50%); width:60%; opacity:.95;}
   .hero__curtain.left{left:0;}
   .hero__curtain.right{right:0; transform:scaleX(-1);}
   .hero__scissors{
-    width:min(58vw,300px);
-    margin:0 auto 1.4rem;
-    opacity:.92;
-    filter:drop-shadow(0 8px 24px rgba(0,0,0,.5));
+    position:relative; z-index:3;
+    width:min(64vw,340px);
+    margin:0 auto 1.2rem;
+    filter:drop-shadow(0 14px 30px rgba(0,0,0,.6));
   }
   .eyebrow{
     font-family:"Space Mono",monospace; font-size:.72rem;
@@ -192,15 +218,22 @@
     color:var(--curtain-2); letter-spacing:0; margin-top:-.1em;
     -webkit-text-stroke:1px rgba(224,181,99,.35);
   }
+  .hero__content{position:relative; z-index:1;}
   .hero__sub{
     max-width:34rem; margin:1.6rem auto 0;
     font-size:1.15rem; line-height:1.5; font-style:italic;
     color:var(--paper);
   }
+  .hero__q-flank{
+    display:flex; align-items:center; justify-content:center; gap:.9rem;
+    margin-top:1.7rem; max-width:30rem; margin-left:auto; margin-right:auto;
+  }
+  .hero__q-flank .rule{height:1px; flex:1; max-width:3.2rem; background:linear-gradient(90deg,transparent,var(--gold));}
+  .hero__q-flank .rule.r{background:linear-gradient(90deg,var(--gold),transparent);}
   .hero__q{
-    margin-top:1.6rem; font-family:"Space Mono",monospace;
-    font-size:.85rem; letter-spacing:.05em; color:var(--gold);
-    max-width:26rem;
+    font-family:"Space Mono",monospace;
+    font-size:.85rem; letter-spacing:.05em; color:var(--gold-bright);
+    text-align:center;
   }
   .hero__scroll{
     margin-top:3rem; font-family:"Space Mono",monospace; font-size:.68rem;
@@ -531,28 +564,60 @@
 <!-- ============================================================ -->
 <div id="topo"></div>
 <section class="hero">
-  <div class="hero__curtain left" aria-hidden="true"></div>
-  <div class="hero__curtain right" aria-hidden="true"></div>
-  <svg class="hero__scissors" viewBox="0 0 200 200" aria-hidden="true">
-    <g stroke="#e0b563" stroke-width="3" fill="none" stroke-linecap="round">
-      <path d="M40 40 L150 150"/>
-      <path d="M40 160 L150 50"/>
+  <div class="hero__vignette" aria-hidden="true"></div>
+  <div class="hero__spotlight" aria-hidden="true"></div>
+  <div class="hero__scraps" aria-hidden="true">
+    <span class="headline-scrap" style="top:8%;left:4%;font-size:.62rem;transform:rotate(-6deg);">bases fraturadas, lideranças em guerra</span>
+    <span class="headline-scrap" style="top:15%;right:3%;font-size:.6rem;transform:rotate(4deg);">bastidores do poder</span>
+    <span class="headline-scrap" style="top:26%;left:2%;font-size:.56rem;transform:rotate(3deg);">a direita em disputa</span>
+    <span class="headline-scrap" style="top:34%;right:5%;font-size:.56rem;transform:rotate(-3deg);">quem herda o eleitorado?</span>
+    <span class="headline-scrap" style="top:6%;left:38%;font-size:.5rem;transform:rotate(-2deg);">ordem e progresso</span>
+  </div>
+  <div class="hero__curtain left" aria-hidden="true">
+    <svg class="tassel" viewBox="0 0 60 90"><line x1="30" y1="0" x2="30" y2="34" stroke="#8a6420" stroke-width="3"/><circle cx="30" cy="34" r="4" fill="#e0b563"/><g stroke="#c9a227" stroke-width="2.4"><path d="M18 38 Q16 60 20 86"/><path d="M24 38 Q23 62 25 88"/><path d="M30 38 L30 90"/><path d="M36 38 Q37 62 35 88"/><path d="M42 38 Q44 60 40 86"/></g></svg>
+  </div>
+  <div class="hero__curtain right" aria-hidden="true">
+    <svg class="tassel" viewBox="0 0 60 90"><line x1="30" y1="0" x2="30" y2="34" stroke="#8a6420" stroke-width="3"/><circle cx="30" cy="34" r="4" fill="#e0b563"/><g stroke="#c9a227" stroke-width="2.4"><path d="M18 38 Q16 60 20 86"/><path d="M24 38 Q23 62 25 88"/><path d="M30 38 L30 90"/><path d="M36 38 Q37 62 35 88"/><path d="M42 38 Q44 60 40 86"/></g></svg>
+  </div>
+
+  <svg class="hero__scissors" viewBox="0 0 220 220" aria-hidden="true">
+    <defs>
+      <linearGradient id="bladeGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#fff3d6"/>
+        <stop offset="35%" stop-color="#e0b563"/>
+        <stop offset="55%" stop-color="#8a6420"/>
+        <stop offset="100%" stop-color="#e0b563"/>
+      </linearGradient>
+      <linearGradient id="handleGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a52c30"/>
+        <stop offset="100%" stop-color="#3c0f13"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(110 110)">
+      <g transform="rotate(28)">
+        <polygon points="-6,-6 96,-10 108,0 96,10 -6,6" fill="url(#bladeGrad)" stroke="#5a4318" stroke-width="1"/>
+        <circle cx="-30" cy="0" r="19" fill="none" stroke="url(#handleGrad)" stroke-width="7"/>
+      </g>
+      <g transform="rotate(-28)">
+        <polygon points="-6,-6 96,-10 108,0 96,10 -6,6" fill="url(#bladeGrad)" stroke="#5a4318" stroke-width="1"/>
+        <circle cx="-30" cy="0" r="19" fill="none" stroke="url(#handleGrad)" stroke-width="7"/>
+      </g>
+      <circle r="7" fill="#3c0f13" stroke="#e0b563" stroke-width="1.5"/>
     </g>
-    <circle cx="30" cy="35" r="13" fill="none" stroke="#e0b563" stroke-width="3"/>
-    <circle cx="30" cy="165" r="13" fill="none" stroke="#e0b563" stroke-width="3"/>
-    <circle cx="152" cy="48" r="4" fill="#7c1f26"/>
-    <circle cx="152" cy="152" r="4" fill="#7c1f26"/>
   </svg>
-  <p class="eyebrow">Investigação política · <em>edição 2026</em></p>
-  <h1 class="hero__title">
-    <span class="l1">O NOVO</span>
-    <span class="l2">TEATRO</span>
-    <span class="l3">das</span>
-    <span class="l4">TESOURAS</span>
-  </h1>
-  <p class="hero__sub">Renan Santos e a guerra que pode redefinir a direita em 2026.</p>
-  <p class="hero__q">QUEM REALMENTE GANHA QUANDO A DIREITA SE DIVIDE?</p>
-  <div class="hero__scroll"><span class="stem"></span>role para investigar</div>
+
+  <div class="hero__content">
+    <p class="eyebrow">Investigação política · <em>edição 2026</em></p>
+    <h1 class="hero__title">
+      <span class="l1">O NOVO</span>
+      <span class="l2">TEATRO</span>
+      <span class="l3">das</span>
+      <span class="l4">TESOURAS</span>
+    </h1>
+    <p class="hero__sub">Renan Santos e a guerra que pode redefinir a direita em 2026.</p>
+    <div class="hero__q-flank"><span class="rule"></span><p class="hero__q">QUEM REALMENTE GANHA QUANDO A DIREITA SE DIVIDE?</p><span class="rule r"></span></div>
+    <div class="hero__scroll"><span class="stem"></span>role para investigar</div>
+  </div>
 </section>
 
 <!-- ============================================================ -->
