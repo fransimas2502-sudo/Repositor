@@ -175,6 +175,75 @@ Este é um dos episódios mais concretos e documentados encontrados nesta primei
 
 ---
 
+## M) RETÓRICA DE CONFRONTO — O CASO "O TRAÍRA TEM DE MORRER" (aprofundamento)
+
+Este é o episódio verbal mais grave encontrado sobre Renan Santos e precisa de tratamento cuidadoso: reproduzir a fala **completa**, nunca cortada, sempre ao lado do esclarecimento que o próprio Renan deu depois. Cortar a frase sem o esclarecimento seria descontextualização.
+
+67. ND Mais — "Quem é Renan Santos, que disse que Flávio Bolsonaro 'tem de morrer'". https://ndmais.com.br/politica/quem-e-renan-santos-que-atacou-flavio-bolsonaro/
+68. O Tempo — "Presidente do MBL se explica após dizer que Flávio Bolsonaro precisava ser 'destruído'" (31/01/2026). https://www.otempo.com.br/politica/congresso/2026/1/31/presidente-do-mbl-se-explica-apos-dizer-que-flavio-bolsonaro-precisava-ser-destruido
+69. TMC — "Renan Santos, do MBL, ameaça 'acabar com a raça' de Flávio Bolsonaro: 'Tem que morrer'". https://tmc.com.br/politica/renan-santos-ameaca-flavio-bolsonaro/
+
+**Citação completa (confirmada em duas fontes independentes — ND Mais e O Tempo):**
+> "O traíra tem de morrer. O traíra é Flávio Bolsonaro, ele precisa ser destruído. Eu vou acabar com a raça do Flávio Bolsonaro."
+
+Também chamou Flávio de "ladrão" e "corrupto" na mesma fala, associando-o ao escândalo das "rachadinhas" e a suspeitas de envolvimento com milícias.
+
+**Contexto:** fala feita em transmissão ao vivo (live) nas redes sociais. **Atenção — divergência de data entre fontes, não resolvida nesta passada:** ND Mais indica dezembro de 2025; O Tempo indica dezembro de 2024. Ambas concordam que a fala viralizou/repercutiu na semana de 31/01/2026. **Tratar como `[DATA A CONFIRMAR]` até localização do vídeo original com timestamp — não fechar o livro com essa citação sem checar a data exata contra o vídeo-fonte.**
+
+**Esclarecimento de Renan Santos (31/01/2026, após repercussão):**
+> "Eu disse que ele tem que morrer politicamente."
+
+Renan afirmou não se arrepender do conteúdo, chamou Flávio de "um câncer para a política brasileira" e reiterou as acusações de rachadinhas e milícia. Disse ainda, sobre sua missão: "Minha função histórica não é só acabar com a esquerda, mas com a roubalheira."
+
+**Leitura editorial obrigatória para o livro:** a expressão "acabar com a raça de alguém" é um idiomatismo comum e amplamente usado no português coloquial brasileiro para "derrotar/destruir (figuradamente)", não um chamado a violência física — mas a frase "tem de morrer", sem qualificação, é ambígua o suficiente para ter gerado repercussão negativa real, o que é o próprio fato jornalístico (a reação, não a intenção). O livro deve narrar exatamente isso: a fala, a repercussão, e o esclarecimento — sem decidir por Renan qual era "a real intenção" dele.
+
+---
+
+## N) IDENTIFICAÇÃO DO RESPONSÁVEL PELA FILIAÇÃO IRREGULAR (aprofundamento do item H)
+
+70. CNN Brasil (blog, Caio Junqueira) — "Autoridades informam ao PL que dirigente do Missão filiou Flávio Bolsonaro". https://www.cnnbrasil.com.br/blogs/caio-junqueira/politica/autoridades-informam-ao-pl-que-dirigente-do-missao-filiou-flavio-bolsonaro/
+71. CNN Brasil (blog, Jussara Soares) — "PF abre inquérito para apurar fraude em filiação de Flávio ao Missão". https://www.cnnbrasil.com.br/blogs/jussara-soares/eleicoes/pf-abre-inquerito-para-apurar-fraude-em-filiacao-de-flavio-ao-missao/
+72. Brasil de Fato — "PF abre inquérito para investigar suposta fraude que filiou Flávio Bolsonaro ao partido Missão" (19/08/2026). https://www.brasildefato.com.br/2026/08/19/pf-abre-inquerito-para-investigar-suposta-fraude-que-filiou-flavio-bolsonaro-ao-partido-missao/
+73. CNN Brasil — "TSE manda instaurar inquérito para apurar filiação de Flávio ao Missão". https://www.cnnbrasil.com.br/politica/tse-manda-instaurar-inquerito-para-apurar-filiacao-de-flavio-ao-missao/
+
+**Novos fatos confirmados:**
+- As autoridades identificaram o autor da filiação por meio de "local do acesso, log e horário": trata-se de **um filiado com função diretiva na legenda** (cargo de direção dentro do Partido Missão). **O nome dessa pessoa não foi divulgado publicamente** até a data desta pesquisa (25/08/2026) — portanto o livro NÃO deve nomear ninguém especulativamente.
+- Polícia Federal abriu inquérito em 18/08/2026, por determinação do TSE, especificamente para apurar a fraude e identificar o responsável — objetivo declarado: "apurar as circunstâncias da fraude e tentar identificar quem realizou a filiação."
+- Crime investigado: inserção de dados falsos em sistema de informações (art. 313-A do Código Penal — pena de 2 a 12 anos).
+- Nota do Missão (mais detalhada nesta passada): partido afirma que a assessoria de Flávio Bolsonaro foi avisada da "tentativa de filiação fraudulenta" já em **02/08/2026** — ou seja, dez dias antes da crise pública — e que "e-mails enviados foram abertos, mas não respondidos". Isso é uma alegação do próprio Missão, não confirmada por fonte independente nesta passada — marcar como `[FATO ALEGADO PELO MISSÃO — buscar confirmação/desmentido do lado de Flávio antes do fechamento]`.
+
+**Estado da apuração em 25/08/2026:** aberta, sem conclusão pública. O responsável interno pela filiação (o "dirigente do Missão") ainda não foi nomeado publicamente pelas autoridades nem identificado de forma independente pela imprensa consultada nesta passada. **Isto permanece hipótese em aberto — não fato encerrado.**
+
+---
+
+## O) DADOS ELEITORAIS OFICIAIS 1989–2022 (para os gráficos das Partes I, II e V)
+
+74. Wikipédia (PT) — "Lista de eleições presidenciais no Brasil". https://pt.wikipedia.org/wiki/Lista_de_elei%C3%A7%C3%B5es_presidenciais_no_Brasil
+75. Gazeta do Povo (especiais) — "Resultados de todas as eleições presidenciais desde 1989". https://especiais.gazetadopovo.com.br/eleicoes/2018/resultados/resultados-eleicoes-presidenciais-desde-1989/
+76. Politize! — "Confira o histórico das eleições presidenciais no Brasil". https://www.politize.com.br/confira-o-historico-das-eleicoes-presidenciais-no-brasil/
+77. TSE — "Eleições anteriores" (fonte oficial primária — usar para conferência final dos números antes da diagramação). https://www.tse.jus.br/eleicoes/eleicoes-anteriores/eleicoes-anteriores
+78. Gazeta do Povo (especiais) — "Pleito de 2018 marca fim do domínio da polarização PT-PSDB nas eleições". https://especiais.gazetadopovo.com.br/eleicoes/2018/pleito-de-2018-marca-fim-dominio-da-polarizacao-pt-psdb-nas-eleicoes/
+79. Congresso em Foco — "Tucanos em extinção: entenda a crise que pode resultar no fim do PSDB". https://www.congressoemfoco.com.br/noticia/106345/tucanos-em-extincao-entenda-a-crise-que-pode-resultar-no-fim-do-psdb
+80. CNN Brasil — "Disputa entre Lula e Bolsonaro é a eleição para presidente mais acirrada da história". https://www.cnnbrasil.com.br/politica/disputa-entre-lula-e-bolsonaro-e-a-eleicao-para-presidente-mais-acirrada-da-historia/
+
+**Tabela indicativa (a validar linha a linha contra o TSE antes da diagramação final — ver item GRÁFICO 1/2/3 na Etapa 7):**
+
+| Ano | 1º turno (líderes) | 2º turno | Observação |
+|---|---|---|---|
+| 1989 | Collor (PRN) e Lula (PT) passam; Brizola (PDT) 3º | Collor 53% × Lula 47% | Não é ainda o "teatro" PT×PSDB — PSDB nem existia como protagonista |
+| 1994 | FHC (PSDB) 55% × Lula (PT) 40% | Vitória em 1º turno | Início do ciclo PT×PSDB |
+| 1998 | FHC (PSDB) vence em 1º turno, 24 estados | Vitória em 1º turno | |
+| 2002 | Lula (PT) × Serra (PSDB) | Lula vence com vantagem expressiva, 26 estados | |
+| 2006 | Lula (PT) × Alckmin (PSDB) | Lula vence, 20 estados a 7 | Disputa mais apertada |
+| 2010 | Dilma (PT) × Serra (PSDB) | Dilma vence | |
+| 2014 | Dilma 41,5% × Aécio (PSDB) 33,5% | Dilma 51,64% × Aécio 48,43% | Disputa mais acirrada do ciclo PT×PSDB |
+| 2018 | Bolsonaro (PSL) 46,21% 1º turno; **Alckmin (PSDB) 4,76%, 4º lugar** | Bolsonaro × Haddad | Colapso histórico do PSDB — fim do "teatro" original |
+| 2022 | Lula (PT) × Bolsonaro (PL) | Lula 50,90% × Bolsonaro 49,10% | Menor diferença da história |
+
+`[NÚMEROS A CONFIRMAR CONTRA TSE.JUS.BR LINHA A LINHA ANTES DO FECHAMENTO — esta tabela é indicativa, produzida a partir de agregadores jornalísticos, não da fonte primária]`
+
+---
+
 ## L) PENDÊNCIAS PARA AS PRÓXIMAS ETAPAS
 
 - [ ] Assistir/analisar cada episódio da playlist Brasil Paralelo (1989 a 2018) e extrair estrutura narrativa (Etapa 2).
