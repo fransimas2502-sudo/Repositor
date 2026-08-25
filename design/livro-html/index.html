@@ -1,0 +1,1464 @@
+<title>O Novo Teatro das Tesouras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --stage:      #14100e;
+    --stage-2:    #201a17;
+    --stage-3:    #2a221e;
+    --hair:       #4a3f37;
+    --paper:      #f1ead8;
+    --paper-dim:  #e7ddc4;
+    --paper-line: #d8caa8;
+    --ink:        #201a13;
+    --ink-soft:   #4a4030;
+    --gold:       #b98a3d;
+    --gold-bright:#e0b563;
+    --curtain:    #7c1f26;
+    --curtain-2:  #a52c30;
+    --curtain-deep:#3c0f13;
+    --focus:      #e0b563;
+    --maxw: 46rem;
+  }
+
+  *{box-sizing:border-box;}
+  html{background:var(--stage);}
+  body{
+    margin:0;
+    background:var(--stage);
+    color:var(--paper);
+    font-family:"Newsreader", Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:var(--gold-bright);}
+  a:focus-visible, button:focus-visible, .toc-link:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+  ::selection{background:var(--curtain-2);color:var(--paper);}
+
+  .visually-hidden{
+    position:absolute; width:1px;height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap;
+  }
+
+  /* ---------- utility texture: fine grain via layered gradients ---------- */
+  .grain{position:relative;}
+  .grain::before{
+    content:"";
+    position:absolute; inset:0;
+    pointer-events:none;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 4px);
+    mix-blend-mode:overlay;
+    opacity:.5;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:fixed; inset:0 0 auto 0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:.7rem 1.1rem;
+    background:rgba(20,16,14,.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--hair);
+  }
+  .topbar__brand{
+    font-family:"Big Shoulders Display", sans-serif;
+    font-weight:800; letter-spacing:.03em;
+    font-size:1rem; text-transform:uppercase;
+    color:var(--gold-bright);
+    display:flex; align-items:center; gap:.5rem;
+    text-decoration:none;
+  }
+  .topbar__brand .scissors-mini{width:1.1rem;height:1.1rem;flex:none;}
+  .topbar__progress{
+    position:absolute; left:0; right:0; bottom:-1px; height:2px;
+    background:var(--hair);
+  }
+  .topbar__progress-bar{
+    height:100%; width:0%;
+    background:linear-gradient(90deg,var(--curtain-2),var(--gold-bright));
+    transition:width .1s linear;
+  }
+  .toc-btn{
+    font-family:"Space Mono",monospace; font-size:.72rem; letter-spacing:.08em;
+    text-transform:uppercase;
+    background:transparent; border:1px solid var(--hair); color:var(--paper);
+    padding:.5rem .8rem; border-radius:2px; cursor:pointer;
+  }
+  .toc-btn:hover{border-color:var(--gold);color:var(--gold-bright);}
+
+  .toc-drawer{
+    position:fixed; inset:0; z-index:50;
+    background:rgba(10,8,7,.92);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:5.5rem 1.2rem 3rem;
+    overflow-y:auto;
+    opacity:0; pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .toc-drawer.open{opacity:1; pointer-events:auto;}
+  .toc-panel{
+    width:100%; max-width:34rem;
+    background:var(--stage-2); border:1px solid var(--hair);
+    padding:2rem 1.6rem;
+  }
+  .toc-panel h2{
+    font-family:"Big Shoulders Display",sans-serif; font-weight:800;
+    text-transform:uppercase; letter-spacing:.04em; color:var(--gold-bright);
+    margin:0 0 1.2rem; font-size:1.5rem;
+  }
+  .toc-list{list-style:none;margin:0;padding:0;}
+  .toc-list li{border-top:1px solid var(--hair);}
+  .toc-list li:first-child{border-top:none;}
+  .toc-link{
+    display:flex; justify-content:space-between; gap:1rem;
+    padding:.65rem .15rem; text-decoration:none;
+    font-family:"Space Mono",monospace; font-size:.82rem;
+    color:var(--paper);
+  }
+  .toc-link:hover{color:var(--gold-bright);}
+  .toc-link .n{color:var(--gold); flex:none;}
+  .toc-close{
+    display:block; margin:1.4rem auto 0; background:none;border:none;
+    color:var(--paper-dim); font-family:"Space Mono",monospace; font-size:.75rem;
+    letter-spacing:.08em; text-transform:uppercase; cursor:pointer; padding:.4rem;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:6rem 1.2rem 4rem;
+    background:
+      radial-gradient(ellipse at 50% 18%, rgba(124,31,38,.35), transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(185,138,61,.14), transparent 60%),
+      var(--stage);
+    overflow:hidden;
+  }
+  .hero__curtain{
+    position:absolute; top:0; bottom:0; width:14%; min-width:70px; max-width:190px;
+    background:
+      repeating-linear-gradient(90deg, var(--curtain-deep) 0 8px, var(--curtain) 8px 16px);
+    box-shadow:inset -18px 0 30px rgba(0,0,0,.55);
+    opacity:.9;
+  }
+  .hero__curtain.left{left:0;}
+  .hero__curtain.right{right:0; transform:scaleX(-1);}
+  .hero__scissors{
+    width:min(58vw,300px);
+    margin:0 auto 1.4rem;
+    opacity:.92;
+    filter:drop-shadow(0 8px 24px rgba(0,0,0,.5));
+  }
+  .eyebrow{
+    font-family:"Space Mono",monospace; font-size:.72rem;
+    letter-spacing:.32em; text-transform:uppercase; color:var(--paper-dim);
+    margin:0 0 1.1rem;
+  }
+  .eyebrow em{font-style:normal;color:var(--gold-bright);}
+  .hero__title{
+    font-family:"Big Shoulders Display",sans-serif;
+    font-weight:800;
+    line-height:.86;
+    margin:0;
+    text-wrap:balance;
+  }
+  .hero__title .l1{
+    display:block; font-size:clamp(2rem,7.4vw,4.2rem);
+    color:var(--paper); letter-spacing:.01em;
+  }
+  .hero__title .l2{
+    display:block; font-size:clamp(3.4rem,13vw,8.4rem);
+    color:var(--gold-bright); letter-spacing:0;
+    text-shadow:0 2px 0 rgba(0,0,0,.3);
+  }
+  .hero__title .l3{
+    display:block; font-size:clamp(1rem,3.4vw,1.6rem);
+    color:var(--paper-dim); font-weight:600; letter-spacing:.14em;
+    margin-top:.5rem;
+  }
+  .hero__title .l4{
+    display:block; font-size:clamp(3rem,11.5vw,7.2rem);
+    color:var(--curtain-2); letter-spacing:0; margin-top:-.1em;
+    -webkit-text-stroke:1px rgba(224,181,99,.35);
+  }
+  .hero__sub{
+    max-width:34rem; margin:1.6rem auto 0;
+    font-size:1.15rem; line-height:1.5; font-style:italic;
+    color:var(--paper);
+  }
+  .hero__q{
+    margin-top:1.6rem; font-family:"Space Mono",monospace;
+    font-size:.85rem; letter-spacing:.05em; color:var(--gold);
+    max-width:26rem;
+  }
+  .hero__scroll{
+    margin-top:3rem; font-family:"Space Mono",monospace; font-size:.68rem;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim);
+    display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  }
+  .hero__scroll .stem{width:1px;height:2.4rem;background:linear-gradient(var(--gold),transparent);}
+
+  /* ---------- part dividers (full bleed dark) ---------- */
+  .part{
+    position:relative;
+    padding:7rem 1.4rem;
+    background:
+      radial-gradient(ellipse at 12% 0%, rgba(124,31,38,.28), transparent 55%),
+      radial-gradient(ellipse at 88% 100%, rgba(185,138,61,.14), transparent 55%),
+      var(--stage);
+    border-top:1px solid var(--hair);
+    text-align:center;
+  }
+  .part__num{
+    font-family:"Space Mono",monospace; font-size:.78rem; letter-spacing:.35em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:1rem;
+  }
+  .part__title{
+    font-family:"Big Shoulders Display",sans-serif; font-weight:900;
+    font-size:clamp(2.1rem,7vw,4.6rem); line-height:.95; margin:0 auto;
+    max-width:20ch; color:var(--paper); text-wrap:balance;
+  }
+  .part__title em{font-style:normal;color:var(--gold-bright);}
+  .part__desc{
+    max-width:32rem; margin:1.3rem auto 0; color:var(--paper-dim);
+    font-style:italic; font-size:1.05rem; line-height:1.55;
+  }
+  .part__scissors{width:64px;height:64px;margin:1.8rem auto 0;opacity:.8;}
+
+  /* ---------- reading sheet (paper pages) ---------- */
+  .sheet-wrap{
+    background:var(--stage);
+    padding:2.4rem 1rem 4rem;
+    display:flex; justify-content:center;
+  }
+  .sheet{
+    width:100%; max-width:52rem;
+    background:var(--paper);
+    color:var(--ink);
+    padding:clamp(1.6rem,5vw,4rem);
+    box-shadow:0 30px 60px rgba(0,0,0,.45), 0 2px 0 var(--paper-line);
+    position:relative;
+  }
+  .sheet::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height:6px;
+    background:linear-gradient(90deg,var(--curtain),var(--gold) 50%,var(--curtain));
+    opacity:.85;
+  }
+
+  .chapter{max-width:var(--maxw); margin:0 auto 3.4rem;}
+  .chapter:last-child{margin-bottom:0;}
+  .chapter__kicker{
+    font-family:"Space Mono",monospace; font-size:.75rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--curtain); margin:0 0 .4rem;
+  }
+  .chapter__title{
+    font-family:"Big Shoulders Display",sans-serif; font-weight:800;
+    font-size:clamp(1.7rem,4.4vw,2.5rem); line-height:1.02; margin:0 0 1.3rem;
+    color:var(--ink); text-wrap:balance;
+  }
+  .chapter__body p{
+    font-size:1.09rem; line-height:1.68; margin:0 0 1.1rem; color:var(--ink);
+  }
+  .chapter__body p:first-of-type::first-letter{
+    font-family:"Big Shoulders Display",sans-serif;
+    font-weight:800; font-size:3.6rem; float:left; line-height:.78;
+    padding:.05em .08em 0 0; color:var(--curtain);
+  }
+  .chapter__body blockquote{
+    margin:1.6rem 0; padding:.2rem 0 .2rem 1.2rem;
+    border-left:3px solid var(--gold);
+    font-style:italic; font-size:1.14rem; line-height:1.55; color:var(--ink-soft);
+  }
+  .chapter__body strong{color:var(--curtain);}
+  .note-inline{
+    font-family:"Space Mono",monospace; font-size:.72rem; color:var(--curtain-2);
+    background:rgba(124,31,38,.08); padding:.03em .35em; border-radius:2px;
+  }
+
+  .source-list{
+    max-width:var(--maxw); margin:0 auto; padding-top:1.2rem;
+    border-top:1px dashed var(--paper-line);
+  }
+  .source-list h4{
+    font-family:"Space Mono",monospace; font-size:.7rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0 0 .6rem;
+  }
+  .source-list ol{
+    margin:0; padding-left:1.2rem; font-family:"Space Mono",monospace;
+    font-size:.74rem; line-height:1.7; color:var(--ink-soft);
+  }
+
+  /* ---------- inserts (special pages) ---------- */
+  .insert{
+    max-width:var(--maxw); margin:2.6rem auto 3.4rem;
+    background:var(--paper-dim);
+    border:1px solid var(--paper-line);
+    padding:1.6rem 1.5rem;
+    position:relative;
+  }
+  .insert__label{
+    position:absolute; top:-.75rem; left:1.2rem;
+    background:var(--stage); color:var(--gold-bright);
+    font-family:"Space Mono",monospace; font-size:.68rem; letter-spacing:.15em;
+    text-transform:uppercase; padding:.28rem .6rem;
+  }
+  .insert__title{
+    font-family:"Big Shoulders Display",sans-serif; font-weight:800;
+    font-size:1.35rem; margin:.6rem 0 1rem; color:var(--ink);
+  }
+
+  .who-table{width:100%; border-collapse:collapse; font-size:.92rem;}
+  .who-table th{
+    text-align:left; font-family:"Space Mono",monospace; font-size:.68rem;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+    border-bottom:1px solid var(--paper-line); padding:.4rem .3rem;
+  }
+  .who-table td{
+    padding:.5rem .3rem; border-bottom:1px solid var(--paper-line); vertical-align:top;
+  }
+  .who-table td.name{font-weight:600; color:var(--curtain); white-space:nowrap;}
+
+  .timeline{list-style:none; margin:0; padding:0; border-left:2px solid var(--gold); }
+  .timeline li{position:relative; padding:0 0 1.1rem 1.3rem; margin-left:.05rem;}
+  .timeline li::before{
+    content:""; position:absolute; left:-6.5px; top:.3rem; width:11px;height:11px;
+    background:var(--curtain); border-radius:50%; border:2px solid var(--paper-dim);
+  }
+  .timeline .yr{font-family:"Space Mono",monospace; font-weight:700; color:var(--curtain); font-size:.85rem;}
+  .timeline .ev{display:block; font-size:.95rem; color:var(--ink); margin-top:.1rem;}
+
+  .facts-grid{display:grid; gap:1rem; grid-template-columns:1fr;}
+  @media(min-width:640px){.facts-grid{grid-template-columns:1fr 1fr 1fr;}}
+  .fact-card{padding:1rem 1rem 1.1rem; border-top:4px solid var(--gold);}
+  .fact-card.unknown{border-top-color:var(--ink-soft);}
+  .fact-card.hyp{border-top-color:var(--curtain);}
+  .fact-card h5{
+    font-family:"Space Mono",monospace; font-size:.7rem; letter-spacing:.14em;
+    text-transform:uppercase; margin:0 0 .55rem; color:var(--ink);
+  }
+  .fact-card ul{margin:0; padding-left:1.1rem; font-size:.9rem; line-height:1.5;}
+  .fact-card li{margin-bottom:.4rem;}
+
+  .faceoff{display:grid; gap:1.4rem; grid-template-columns:1fr;}
+  @media(min-width:640px){.faceoff{grid-template-columns:1fr 1fr;}}
+  .faceoff__col h5{
+    font-family:"Big Shoulders Display",sans-serif; font-size:1.05rem;
+    letter-spacing:.02em; margin:0 0 .7rem; text-transform:uppercase;
+  }
+  .faceoff__col.renan h5{color:var(--curtain);}
+  .faceoff__col.flavio h5{color:var(--gold);}
+  .say{
+    border-left:3px solid var(--paper-line); padding:.15rem 0 .15rem .8rem; margin-bottom:.9rem;
+  }
+  .say p{margin:0 0 .3rem; font-size:.94rem; line-height:1.45; font-style:italic;}
+  .say cite{font-family:"Space Mono",monospace; font-style:normal; font-size:.68rem; color:var(--ink-soft);}
+  .say.pending{opacity:.7;}
+
+  .doc-box{border:1px dashed var(--ink-soft); padding:1rem 1.1rem; font-size:.92rem;}
+  .doc-box dt{font-family:"Space Mono",monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--curtain); margin-top:.7rem;}
+  .doc-box dt:first-child{margin-top:0;}
+  .doc-box dd{margin:.2rem 0 0; line-height:1.5;}
+
+  .chart-box{}
+  .chart-box svg{width:100%; height:auto; overflow:visible;}
+  .chart-caption{font-size:.82rem; color:var(--ink-soft); margin-top:.7rem; line-height:1.5;}
+  .chart-legend{display:flex; gap:1rem; flex-wrap:wrap; font-family:"Space Mono",monospace; font-size:.68rem; margin-top:.6rem; color:var(--ink-soft);}
+  .chart-legend span{display:inline-flex; align-items:center; gap:.35rem;}
+  .swatch{width:.7rem;height:.7rem; display:inline-block;}
+
+  .img-slot{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; min-height:11rem; border:2px dashed var(--ink-soft);
+    padding:1.4rem; gap:.5rem;
+  }
+  .img-slot .tag{
+    font-family:"Space Mono",monospace; font-size:.68rem; letter-spacing:.15em;
+    text-transform:uppercase; color:var(--curtain); border:1px solid var(--curtain);
+    padding:.2rem .55rem;
+  }
+  .img-slot p{margin:0; font-size:.86rem; color:var(--ink-soft); max-width:28rem;}
+
+  .compare-grid{display:grid; gap:1rem; grid-template-columns:1fr;}
+  @media(min-width:640px){.compare-grid{grid-template-columns:1fr 1fr;}}
+  .compare-card h5{
+    font-family:"Space Mono",monospace; font-size:.7rem; letter-spacing:.14em;
+    text-transform:uppercase; margin:0 0 .5rem; color:var(--curtain);
+  }
+  .compare-card ul{margin:0; padding-left:1.1rem; font-size:.9rem; line-height:1.5;}
+  .compare-card li{margin-bottom:.4rem;}
+
+  .tribunal{display:grid; gap:0; grid-template-columns:1fr; border:1px solid var(--paper-line);}
+  @media(min-width:640px){.tribunal{grid-template-columns:1fr 1fr;}}
+  .tribunal__col{padding:1.2rem 1.3rem;}
+  .tribunal__col.for{background:rgba(185,138,61,.13); border-bottom:1px solid var(--paper-line);}
+  .tribunal__col.against{background:rgba(124,31,38,.08);}
+  @media(min-width:640px){
+    .tribunal__col.for{border-bottom:none; border-right:1px solid var(--paper-line);}
+  }
+  .tribunal__col h5{
+    font-family:"Big Shoulders Display",sans-serif; font-size:1.15rem; margin:0 0 .7rem;
+    text-transform:uppercase;
+  }
+  .tribunal__col.for h5{color:#8a6420;}
+  .tribunal__col.against h5{color:var(--curtain);}
+  .tribunal__col ol{margin:0; padding-left:1.2rem; font-size:.92rem; line-height:1.5;}
+  .tribunal__col li{margin-bottom:.6rem;}
+
+  /* pull quote (black page) */
+  .pullpage{
+    background:var(--stage); color:var(--paper);
+    padding:6rem 1.4rem; text-align:center;
+    border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
+  }
+  .pullpage__mark{
+    font-family:"Big Shoulders Display",sans-serif; font-size:4rem; color:var(--curtain-2);
+    line-height:1; margin-bottom:.4rem;
+  }
+  .pullpage__text{
+    max-width:38rem; margin:0 auto; font-style:italic;
+    font-size:clamp(1.3rem,3.6vw,2rem); line-height:1.35; color:var(--paper);
+    text-wrap:balance;
+  }
+  .pullpage__attr{
+    margin-top:1.4rem; font-family:"Space Mono",monospace; font-size:.78rem;
+    letter-spacing:.06em; color:var(--gold-bright);
+  }
+  .pullpage__attr span{display:block; color:var(--paper-dim); font-size:.72rem; margin-top:.2rem;}
+
+  /* small scissors divider between chapters */
+  .scdiv{display:flex; align-items:center; justify-content:center; gap:.8rem; margin:2.6rem auto; max-width:var(--maxw);}
+  .scdiv .line{height:1px; flex:1; background:var(--paper-line);}
+  .scdiv svg{width:20px;height:20px; opacity:.7;}
+
+  /* methodology callout under prologue */
+  .method-note{
+    max-width:var(--maxw); margin:2rem auto 0; padding:1.1rem 1.3rem;
+    border:1px solid var(--paper-line); background:rgba(124,31,38,.05);
+    font-size:.88rem; line-height:1.55; color:var(--ink-soft);
+  }
+  .method-note b{color:var(--curtain);}
+
+  /* epilogue / closing */
+  .closing{
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(124,31,38,.3), transparent 60%),
+      var(--stage);
+    padding:6rem 1.4rem 3rem; text-align:center; border-top:1px solid var(--hair);
+  }
+  .closing__q{
+    font-family:"Big Shoulders Display",sans-serif; font-weight:800;
+    font-size:clamp(1.6rem,5vw,2.6rem); max-width:26ch; margin:0 auto;
+    color:var(--gold-bright); text-wrap:balance;
+  }
+
+  /* colophon / back matter */
+  .colophon{background:var(--stage-2); padding:3.2rem 1.4rem 5rem; border-top:1px solid var(--hair);}
+  .colophon-wrap{max-width:52rem; margin:0 auto;}
+  .colophon h3{
+    font-family:"Big Shoulders Display",sans-serif; font-size:1.3rem; color:var(--gold-bright);
+    text-transform:uppercase; letter-spacing:.03em; margin:2rem 0 .8rem;
+  }
+  .colophon h3:first-child{margin-top:0;}
+  .biblio-grid{display:grid; gap:1.2rem; grid-template-columns:1fr;}
+  @media(min-width:640px){.biblio-grid{grid-template-columns:1fr 1fr;}}
+  .biblio-cat{font-family:"Space Mono",monospace; font-size:.78rem; line-height:1.7; color:var(--paper-dim);}
+  .biblio-cat b{display:block; color:var(--gold); text-transform:uppercase; letter-spacing:.08em; font-size:.7rem; margin-bottom:.4rem;}
+  .flags{
+    display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem;
+  }
+  .flag{
+    font-family:"Space Mono",monospace; font-size:.68rem; letter-spacing:.06em;
+    border:1px solid var(--hair); padding:.3rem .6rem; color:var(--paper-dim);
+  }
+  .colophon p.small{
+    font-family:"Space Mono",monospace; font-size:.72rem; color:var(--paper-dim);
+    line-height:1.7;
+  }
+  .colophon a{color:var(--gold-bright);}
+
+  @media (prefers-reduced-motion: no-preference){
+    .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
+    .reveal.in{opacity:1; transform:none;}
+  }
+</style>
+
+<!-- ============================================================ -->
+<!-- TOP BAR -->
+<!-- ============================================================ -->
+<div class="topbar">
+  <a href="#topo" class="topbar__brand">
+    <svg class="scissors-mini" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 7.8 L20 18 M8 16.2 L20 6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    Teatro das Tesouras
+  </a>
+  <button class="toc-btn" id="tocOpen" aria-haspopup="dialog" aria-controls="tocDrawer">Sumário</button>
+  <div class="topbar__progress"><div class="topbar__progress-bar" id="progressBar"></div></div>
+</div>
+
+<div class="toc-drawer" id="tocDrawer" role="dialog" aria-modal="true" aria-label="Sumário do livro">
+  <div class="toc-panel">
+    <h2>Sumário</h2>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#abertura"><span>Abertura</span><span class="n">—</span></a></li>
+      <li><a class="toc-link" href="#prologo"><span>Prólogo — Duas Lâminas</span><span class="n">—</span></a></li>
+      <li><a class="toc-link" href="#parte1"><span>Parte I — O Primeiro Teatro</span><span class="n">01–04</span></a></li>
+      <li><a class="toc-link" href="#parte2"><span>Parte II — O Homem que Quebrou a Tesoura</span><span class="n">05</span></a></li>
+      <li><a class="toc-link" href="#parte3"><span>Parte III — A Direita Contra Ela Mesma</span><span class="n">06–08</span></a></li>
+      <li><a class="toc-link" href="#parte4"><span>Parte IV — Renan Santos</span><span class="n">09–12</span></a></li>
+      <li><a class="toc-link" href="#parte5"><span>Parte V — 2026</span><span class="n">13–18</span></a></li>
+      <li><a class="toc-link" href="#parte6"><span>Parte VI — A Nova Tesoura?</span><span class="n">19</span></a></li>
+      <li><a class="toc-link" href="#parte7"><span>Parte VII — O Julgamento do Leitor</span><span class="n">20</span></a></li>
+      <li><a class="toc-link" href="#epilogo"><span>Epílogo</span><span class="n">—</span></a></li>
+      <li><a class="toc-link" href="#fontes"><span>Fontes e Documentos</span><span class="n">—</span></a></li>
+    </ul>
+    <button class="toc-close" id="tocClose">Fechar ✕</button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- HERO -->
+<!-- ============================================================ -->
+<div id="topo"></div>
+<section class="hero">
+  <div class="hero__curtain left" aria-hidden="true"></div>
+  <div class="hero__curtain right" aria-hidden="true"></div>
+  <svg class="hero__scissors" viewBox="0 0 200 200" aria-hidden="true">
+    <g stroke="#e0b563" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M40 40 L150 150"/>
+      <path d="M40 160 L150 50"/>
+    </g>
+    <circle cx="30" cy="35" r="13" fill="none" stroke="#e0b563" stroke-width="3"/>
+    <circle cx="30" cy="165" r="13" fill="none" stroke="#e0b563" stroke-width="3"/>
+    <circle cx="152" cy="48" r="4" fill="#7c1f26"/>
+    <circle cx="152" cy="152" r="4" fill="#7c1f26"/>
+  </svg>
+  <p class="eyebrow">Investigação política · <em>edição 2026</em></p>
+  <h1 class="hero__title">
+    <span class="l1">O NOVO</span>
+    <span class="l2">TEATRO</span>
+    <span class="l3">das</span>
+    <span class="l4">TESOURAS</span>
+  </h1>
+  <p class="hero__sub">Renan Santos e a guerra que pode redefinir a direita em 2026.</p>
+  <p class="hero__q">QUEM REALMENTE GANHA QUANDO A DIREITA SE DIVIDE?</p>
+  <div class="hero__scroll"><span class="stem"></span>role para investigar</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ABERTURA -->
+<!-- ============================================================ -->
+<div class="sheet-wrap" id="abertura">
+<article class="sheet grain">
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Abertura</p>
+    <h2 class="chapter__title">São Paulo, 23 de agosto de 2026</h2>
+    <div class="chapter__body">
+      <p>Estúdio da TV Band. Dois púlpitos estão vazios.</p>
+      <p>Um pertence a Luiz Inácio Lula da Silva. O outro, a Flávio Bolsonaro.</p>
+      <p>Nenhum dos dois está no prédio.<span class="note-inline">[1]</span></p>
+      <p>No púlpito ao lado, um homem de 42 anos sobe ao palco carregando duas fraldas. Em cada uma, um nome escrito à mão. Ele as deixa sobre a mesa, olha para a câmera, e diz que os dois ausentes são "covardes e canalhas".<span class="note-inline">[2]</span></p>
+      <p>Chama os dois de criminosos. Promete "passar a rapa" no crime organizado. Fala em intervenção federal em estados governados pelo PT.<span class="note-inline">[3]</span></p>
+      <p>O nome dele é Renan Santos.</p>
+      <p>Doze dias antes, o sistema da Justiça Eleitoral brasileira havia registrado Flávio Bolsonaro — senador, filho do ex-presidente, principal nome da direita nas pesquisas — como filiado ao partido de Renan Santos.<span class="note-inline">[4]</span></p>
+      <p>Não ao PL. Ao Missão.</p>
+      <p>O registro travou a candidatura de Flávio por algumas horas. A Justiça Eleitoral abriu inquérito. A Polícia Federal também. Ninguém, até o fechamento desta pesquisa, tinha dito publicamente quem fez aquilo, nem por quê.<span class="note-inline">[5]</span></p>
+      <p>Renan Santos diz que foi vítima.</p>
+      <p>Flávio Bolsonaro diz que foi fraude.</p>
+      <p>E, dois meses antes disso, era o próprio Renan quem, ao vivo, tinha dito sobre Flávio: <em>"O traíra tem de morrer."</em></p>
+      <p>Depois explicou: "morrer politicamente."<span class="note-inline">[6]</span></p>
+      <p>Isso é 2026. Uma eleição em que o principal adversário declarado de um candidato de direita não é, na maior parte do tempo, o candidato da esquerda.</p>
+      <p>É outro candidato de direita.</p>
+      <p>Há sete anos, Renan Santos cunhou um termo para descrever o que ele considera dois lados do mesmo problema: "bolsopetismo". A ideia era simples — para ele, petismo e bolsonarismo, apesar da hostilidade mútua, funcionam pela mesma lógica de poder.<span class="note-inline">[7]</span></p>
+      <p>Em 2026, ele decidiu testar essa tese nas urnas.</p>
+      <p>A pergunta que este livro faz não é se Renan Santos está certo sobre o bolsopetismo. Nem se ele é sincero.</p>
+      <p>A pergunta é outra, mais incômoda: <strong>e se estivermos assistindo ao nascimento de um novo Teatro das Tesouras?</strong></p>
+      <p>Ainda não vamos responder.</p>
+    </div>
+    <div class="source-list">
+      <h4>Fontes desta seção</h4>
+      <ol>
+        <li>[1–3] O Tempo, "Renan Santos vai aos púlpitos, chama Lula e Flávio de criminosos e promete passar 'rapa' em bandidos", 23/08/2026.</li>
+        <li>[4–5] CNN Brasil e Brasil de Fato, cobertura do episódio da filiação ao Partido Missão, 13–19/08/2026.</li>
+        <li>[6] ND Mais e O Tempo, declaração de Renan Santos sobre Flávio Bolsonaro e esclarecimento posterior, dez/2024 ou dez/2025 (data em checagem) e 31/01/2026.</li>
+        <li>[7] Renan Santos, publicação no X/Twitter, 2019.</li>
+      </ol>
+    </div>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PRÓLOGO -->
+<!-- ============================================================ -->
+<div class="sheet-wrap" id="prologo">
+<article class="sheet grain">
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Prólogo</p>
+    <h2 class="chapter__title">Duas Lâminas</h2>
+    <div class="chapter__body">
+      <p>Uma tesoura tem duas lâminas.</p>
+      <p>Elas parecem se mover em direções opostas. Uma sobe enquanto a outra desce. Uma vai para a esquerda enquanto a outra vai para a direita.</p>
+      <p>E, no entanto, é exatamente esse movimento contrário que faz a tesoura cortar.</p>
+      <p>Se as duas lâminas se movessem juntas, na mesma direção, não cortariam nada. É o desencontro que produz o corte. A oposição é, ali, a própria função.</p>
+      <p>Em 2018, a produtora Brasil Paralelo popularizou, no debate político brasileiro, uma metáfora com esse nome — "Teatro das Tesouras" — para descrever seis eleições presidenciais seguidas, de 1994 a 2014, em que PT e PSDB dividiram o país em dois lados aparentemente irreconciliáveis.<span class="note-inline">[1]</span></p>
+      <p>A tese da série é forte, e é preciso dizer com todas as letras, já aqui no prólogo, de onde ela vem: é uma leitura política de uma produtora de conteúdo com linha editorial declaradamente à direita, não uma conclusão da ciência política brasileira. A literatura acadêmica que estuda a polarização PT×PSDB — publicada em revistas como <em>Opinião Pública</em> e por pesquisadores do Cesop/Unicamp — descreve uma disputa real, movida por antipetismo, identidade partidária e perfil socioeconômico do eleitorado. Não uma peça combinada.<span class="note-inline">[2]</span></p>
+      <p>Este livro não vai resolver essa discordância por você. Vai mostrar os dois lados, com fonte, e deixar você decidir.</p>
+      <p>Mas há uma pergunta que sobrevive a essa discordância, e é essa pergunta que interessa aqui: <strong>independentemente de haver ou não combinação, duas forças políticas que se odeiam publicamente podem, ainda assim, produzir um efeito estrutural parecido — o de esvaziar o espaço para qualquer outra alternativa?</strong></p>
+      <p>Essa pergunta não exige provar conspiração. Exige só olhar para os números.</p>
+      <p>E é essa pergunta — não a de 1994, mas a de 2026 — que este livro investiga.</p>
+      <p>De um lado, hoje, está Lula. Do outro, ao menos nas pesquisas de agosto de 2026, está Flávio Bolsonaro.<span class="note-inline">[3]</span></p>
+      <p>E, entre os dois — atacando ambos, ao mesmo tempo, com a mesma dureza — está um homem que ajudou a construir o movimento que mais mobilizou a direita brasileira na última década, e que hoje diz que essa mesma direita "traiu a si mesma".</p>
+      <p>Se ele estiver certo, isso é coragem.</p>
+      <p>Se ele estiver errado — ou se, tendo razão sobre o diagnóstico, produzir na prática o efeito contrário ao que promete —, isso também tem nome.</p>
+      <p>E é esse nome que este livro tenta encontrar.</p>
+    </div>
+    <div class="method-note">
+      <b>Como ler este livro.</b> Todo o texto separa três coisas: <b>fato comprovado</b> (documento, registro oficial, vídeo, declaração com fonte), <b>interpretação</b> (leitura política — de um analista, de um adversário, ou deste próprio livro) e <b>hipótese</b> (possibilidade levantada por evidência parcial). Nunca uma vira a outra. Nenhuma acusação de conluio, fraude ou má-fé aparece aqui sem prova documental — quando a prova não existe, o livro diz isso explicitamente, em vez de sugerir.
+    </div>
+    <div class="source-list">
+      <h4>Fontes desta seção</h4>
+      <ol>
+        <li>[1] Brasil Paralelo, "Teatro das Tesouras" (artigo e série documental), brasilparalelo.com.br.</li>
+        <li>[2] SciELO/<em>Opinião Pública</em> e Cesop/Unicamp, estudos sobre polarização política no Brasil.</li>
+        <li>[3] Pesquisas eleitorais Palver, BTG/Nexus, PoderData e Genial/Quaest, agosto de 2026.</li>
+      </ol>
+    </div>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE I -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte1">
+  <p class="part__num">Parte I</p>
+  <h2 class="part__title">O <em>Primeiro</em> Teatro</h2>
+  <p class="part__desc">1989–2014. Vinte anos, seis eleições, dois sobrenomes de partido. Como o Brasil aprendeu a votar em pares.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 1</p>
+    <h2 class="chapter__title">Quando a Política Virou um Palco</h2>
+    <div class="chapter__body">
+      <p>Em 15 de novembro de 1989, pela primeira vez em 29 anos, os brasileiros escolheram um presidente pelo voto direto.</p>
+      <p>Vinte e dois candidatos disputaram o primeiro turno. Chegaram ao segundo Fernando Collor de Mello, do pequeno PRN, e Luiz Inácio Lula da Silva, do PT — um partido com sete anos de existência, nascido do sindicalismo do ABC paulista.<span class="note-inline">[1]</span></p>
+      <p>Collor venceu. 53% a 47%, no que foi, até então, a disputa mais acirrada do país desde a redemocratização.<span class="note-inline">[1]</span></p>
+      <p>Não havia PSDB no centro dessa história ainda. O partido tinha sido fundado havia menos de dois anos, em 1988, por um grupo de dissidentes do PMDB. Em 1989, era coadjuvante.</p>
+      <p>O protagonismo viria depois. E, quando viesse, duraria seis eleições seguidas.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 2</p>
+    <h2 class="chapter__title">PT × PSDB: Nasce a Grande Polarização</h2>
+    <div class="chapter__body">
+      <p>Em 1994, o cenário mudou.</p>
+      <p>Fernando Henrique Cardoso, ex-ministro da Fazenda e autor do Plano Real — que havia acabado de derrubar uma hiperinflação que corroía o país havia mais de uma década —, venceu no primeiro turno, com 55% dos votos. Lula ficou em segundo, com 40%.<span class="note-inline">[2]</span></p>
+      <p>A partir daquele ano, e por seis eleições presidenciais consecutivas, até 2014, a disputa pelo Palácio do Planalto teve sempre os mesmos dois sobrenomes de partido no centro do tabuleiro: PT e PSDB.<span class="note-inline">[2][3]</span></p>
+      <p>Foi esse período — 1994 a 2014 — que a produtora Brasil Paralelo batizou, anos depois, de "Teatro das Tesouras": a tese de que, por trás da hostilidade pública entre os dois partidos, haveria um projeto de poder compartilhado, ocultado sob a aparência de disputa.<span class="note-inline">[4]</span></p>
+      <p>É uma leitura forte. E é preciso registrar, já aqui, que ela não é consenso.</p>
+      <p>A ciência política brasileira que estudou esse período — publicada em revistas acadêmicas como <em>Opinião Pública</em> e por pesquisadores do Cesop/Unicamp — descreve algo estruturalmente diferente: uma polarização real, movida por identificação partidária, antipetismo crescente e o perfil socioeconômico do eleitorado. Não um acordo de bastidores.<span class="note-inline">[5][6]</span></p>
+      <p>Este livro vai voltar a essa discordância mais adiante — no Capítulo 19, ela será enfrentada de frente. Por ora, o que importa é o palco: durante duas décadas, o eleitor brasileiro só teve, na prática, dois lugares para ficar.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 3</p>
+    <h2 class="chapter__title">Duas Forças Dominam o Tabuleiro</h2>
+    <div class="chapter__body">
+      <p>1998: FHC é reeleito ainda no primeiro turno, vencendo em 24 dos 27 estados. Lula, pela terceira vez, fica em segundo.<span class="note-inline">[2]</span></p>
+      <p>2002: a virada. Lula vence José Serra, do PSDB, no segundo turno, com vantagem expressiva — 26 dos 27 estados.<span class="note-inline">[2]</span> É a primeira vitória presidencial do PT.</p>
+      <p>2006: Lula enfrenta Geraldo Alckmin, também do PSDB. Vence de novo — mas por margem mais estreita: 20 estados a 7.<span class="note-inline">[2]</span></p>
+      <p>Quatro eleições. Dois partidos. Sempre os mesmos dois.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 4</p>
+    <h2 class="chapter__title">A Polarização Perfeita</h2>
+    <div class="chapter__body">
+      <p>2010: Dilma Rousseff, escolhida por Lula para sucedê-lo, enfrenta José Serra outra vez. Vence.<span class="note-inline">[2]</span></p>
+      <p>2014: a disputa mais apertada do ciclo inteiro. No primeiro turno, Dilma tem 41,5% contra 33,5% de Aécio Neves, do PSDB. No segundo turno, a distância cai ainda mais: Dilma 51,64%, Aécio 48,43%. Menos de quatro pontos separam os dois lados do país.<span class="note-inline">[7]</span></p>
+      <p>Seis eleições. Vinte anos. Sempre PT contra PSDB.</p>
+      <p>O eleitor que não se via em nenhum dos dois lados simplesmente não tinha, na prática, um terceiro lugar competitivo para onde ir.</p>
+      <p>E foi exatamente esse vácuo — o espaço fora das duas lâminas da tesoura — que a eleição seguinte, 2018, encheu de uma vez.</p>
+    </div>
+  </div>
+
+  <!-- GRÁFICO 1 -->
+  <div class="insert reveal">
+    <span class="insert__label">Gráfico 1</span>
+    <h3 class="insert__title">A margem que não parava de encolher</h3>
+    <div class="chart-box">
+      <svg viewBox="0 0 560 220" role="img" aria-label="Margem de vitória no segundo turno em 1989, 2014 e 2018/2022 comparados">
+        <!-- axis -->
+        <line x1="60" y1="180" x2="540" y2="180" stroke="#c9b98e" stroke-width="1"/>
+        <!-- 1989 -->
+        <rect x="90" y="70" width="46" height="110" fill="#b98a3d"/>
+        <text x="113" y="62" text-anchor="middle" font-family="Space Mono" font-size="12" fill="#201a13">6,0 pts</text>
+        <text x="113" y="198" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">1989</text>
+        <text x="113" y="212" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#8a7e63">Collor–Lula</text>
+        <!-- 2014 -->
+        <rect x="220" y="147" width="46" height="33" fill="#7c1f26"/>
+        <text x="243" y="139" text-anchor="middle" font-family="Space Mono" font-size="12" fill="#201a13">3,2 pts</text>
+        <text x="243" y="198" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">2014</text>
+        <text x="243" y="212" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#8a7e63">Dilma–Aécio</text>
+        <!-- 2018 (different race, first round leader vs collapsed PSDB) -->
+        <rect x="350" y="34" width="46" height="146" fill="#b98a3d"/>
+        <text x="373" y="26" text-anchor="middle" font-family="Space Mono" font-size="12" fill="#201a13">41,5 pts</text>
+        <text x="373" y="198" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">2018</text>
+        <text x="373" y="212" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#8a7e63">Bolsonaro–Alckmin (1º turno)</text>
+        <!-- 2022 -->
+        <rect x="450" y="163" width="46" height="17" fill="#7c1f26"/>
+        <text x="473" y="155" text-anchor="middle" font-family="Space Mono" font-size="12" fill="#201a13">1,8 pts</text>
+        <text x="473" y="198" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">2022</text>
+        <text x="473" y="212" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#8a7e63">Lula–Bolsonaro</text>
+      </svg>
+    </div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#b98a3d"></span>margem entre 1º e 2º colocado</span>
+      <span><span class="swatch" style="background:#7c1f26"></span>disputas mais acirradas do ciclo</span>
+    </div>
+    <p class="chart-caption">Apenas os anos com percentual oficial confirmado nesta pesquisa entram no gráfico (1989 2º turno; 2014 1º turno; 2018 1º turno — Bolsonaro vs. Alckmin, não comparável diretamente à distância PT×PSDB por serem candidatos de campos diferentes; 2022 resultado final). 1998, 2002, 2006 e 2010 ficam de fora até confirmação linha a linha contra o TSE — ver <code>research/08-fact-check-pendencias.md</code>. Fonte: TSE / agregadores citados no dossiê de fontes.</p>
+  </div>
+
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE II -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte2">
+  <p class="part__num">Parte II</p>
+  <h2 class="part__title">O Homem que <em>Quebrou</em> a Tesoura</h2>
+  <p class="part__desc">2018. Uma lâmina se solta do cabo — e o tabuleiro nunca mais foi o mesmo.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 5</p>
+    <h2 class="chapter__title">2018: o Sistema Perde o Controle da Narrativa</h2>
+    <div class="chapter__body">
+      <p>Geraldo Alckmin chegou a 2018 com a maior coligação da história das eleições brasileiras. Nove partidos. O maior tempo de televisão de todos os candidatos.<span class="note-inline">[1]</span></p>
+      <p>Não foi suficiente.</p>
+      <p>Terminou em quarto lugar. 4,76% dos votos.<span class="note-inline">[1]</span></p>
+      <p>Para um partido que havia disputado — e, em quatro dessas seis vezes, chegado ao segundo turno — todas as eleições presidenciais desde 1994, foi mais do que uma derrota. Foi um colapso.<span class="note-inline">[2]</span></p>
+      <p>Do outro lado do espectro, um deputado federal de baixa expressão nacional durante quase três décadas de mandato surfou uma onda que nem os principais institutos de pesquisa previram em toda sua extensão. Jair Bolsonaro, do pequeno PSL, venceu já no primeiro turno: 46,21%.<span class="note-inline">[1]</span></p>
+      <p>O "teatro" — se um dia foi isso — perdeu um dos dois atores principais. Da noite para o dia, o PSDB deixou de ser um dos dois pilares da política brasileira e virou uma legenda entre outras.<span class="note-inline">[3]</span></p>
+      <p>Nesse mesmo ciclo eleitoral, um movimento de rua que havia nascido quatro anos antes, contra o PT, decidiu apoiar publicamente o novo nome da direita.</p>
+      <p>O nome do movimento era MBL. Um de seus fundadores se chamava Renan Santos.</p>
+      <p>É aqui que as duas histórias deste livro — a do teatro de 1989 a 2014, e a de Renan Santos — se cruzam pela primeira vez.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Antes × Depois</span>
+    <h3 class="insert__title">O colapso eleitoral do PSDB</h3>
+    <div class="chart-box">
+      <svg viewBox="0 0 400 200" role="img" aria-label="PSDB 55% em 1994 contra 4,76% em 2018">
+        <line x1="50" y1="170" x2="360" y2="170" stroke="#c9b98e" stroke-width="1"/>
+        <rect x="90" y="34" width="70" height="136" fill="#b98a3d"/>
+        <text x="125" y="26" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#201a13">55%</text>
+        <text x="125" y="188" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">1994 · FHC (venceu)</text>
+        <rect x="240" y="164" width="70" height="6" fill="#7c1f26"/>
+        <text x="275" y="156" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#201a13">4,76%</text>
+        <text x="275" y="188" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4a4030">2018 · Alckmin (4º lugar)</text>
+      </svg>
+    </div>
+    <p class="chart-caption">Vinte e quatro anos separam o auge e o colapso do PSDB em eleições presidenciais. Fonte: TSE / Gazeta do Povo, "Resultado das Eleições 2018: Presidente".</p>
+  </div>
+
+  <div class="source-list">
+    <h4>Fontes do capítulo</h4>
+    <ol>
+      <li>[1] Gazeta do Povo, "Resultado das Eleições 2018: Presidente"; Wikipédia, "Geraldo Alckmin 2018 presidential campaign".</li>
+      <li>[2] Ver Parte I e fontes ali citadas.</li>
+      <li>[3] Gazeta do Povo (especiais), "Pleito de 2018 marca fim do domínio da polarização PT-PSDB nas eleições"; Congresso em Foco, "Tucanos em extinção".</li>
+    </ol>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE III -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte3">
+  <p class="part__num">Parte III</p>
+  <h2 class="part__title">A Direita Contra Ela <em>Mesma</em></h2>
+  <p class="part__desc">Um movimento de rua nasce para lutar contra o PT. Termina a década seguinte em guerra aberta consigo mesmo.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 6</p>
+    <h2 class="chapter__title">O Nascimento do MBL</h2>
+    <div class="chapter__body">
+      <p>Junho de 2013. As ruas do Brasil enchem de gente.</p>
+      <p>Começa como protesto contra o aumento da passagem de ônibus em São Paulo. Não termina assim. Em poucas semanas, vira o maior ciclo de manifestações de rua da história recente do país — e um terreno onde novas lideranças políticas, de vários espectros, encontram espaço para nascer.<span class="note-inline">[1]</span></p>
+      <p>Entre elas, um grupo de jovens de orientação liberal e conservadora começa a se organizar. Em 2014, formalizam um nome: Movimento Brasil Livre — MBL. Entre os fundadores estão Kim Kataguiri, Fernando Holiday, Rubinho Nunes.</p>
+      <p>E Renan Santos.<span class="note-inline">[2]</span></p>
+      <p>O movimento nasce em resposta direta à reeleição de Dilma Rousseff, naquele mesmo ano de 2014. Sua bandeira inicial: apoio à Operação Lava Jato, combate à corrupção, impeachment.<span class="note-inline">[2]</span></p>
+      <p>Dentro do grupo, uma divisão de papéis se forma naturalmente. Kataguiri vira o rosto do movimento — o mais visível, o mais entrevistado, o que carrega o microfone.</p>
+      <p>Renan assume outra função: a de organizar por dentro. Estruturar diretórios estaduais. Desenhar campanhas. Coordenar.<span class="note-inline">[3]</span></p>
+      <p>É essa segunda função — a de arquiteto, não de vitrine — que vai definir toda a trajetória de Renan Santos nos doze anos seguintes.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 7</p>
+    <h2 class="chapter__title">Renan Santos Entra em Cena</h2>
+    <div class="chapter__body">
+      <p>Ele nasceu em 14 de fevereiro de 1984, na Mooca, bairro tradicional de São Paulo. Pai advogado, mãe psicóloga.<span class="note-inline">[4]</span></p>
+      <p>Em 2003, entrou na Faculdade de Direito da USP. Não terminou — saiu para trabalhar com o pai, num grupo empresarial.<span class="note-inline">[4]</span></p>
+      <p>Antes do MBL, esteve filiado ao PSDB, entre aproximadamente 2010 e 2015 — o mesmo partido que, na Parte I deste livro, protagonizou seis eleições seguidas contra o PT.<span class="note-inline">[5]</span> É um detalhe biográfico que poucos perfis publicados sobre ele destacam, mas que importa: o homem que hoje ataca os dois lados do espectro político brasileiro teve, ele mesmo, um pé dentro de um deles.</p>
+      <p>Em 2015, já como um dos principais articuladores do MBL, participa ativamente da organização das manifestações pró-impeachment de Dilma Rousseff, incluindo a formação do que ficou conhecido como o "comitê pró-impeachment" no Congresso.<span class="note-inline">[3]</span></p>
+      <p>Em abril de 2016, lidera a Marcha pela Liberdade — cerca de 1.000 quilômetros a pé, de São Paulo a Brasília, em 33 dias, para pressionar o Congresso Nacional a votar pelo impeachment.<span class="note-inline">[3]</span></p>
+      <p>Meses depois, em 31 de agosto de 2016, o impeachment é consumado pelo Senado.</p>
+      <p>Renan Santos tinha 32 anos e já era, nos bastidores, uma das figuras mais influentes da nova direita brasileira.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Quem é quem</span>
+    <h3 class="insert__title">MBL e Partido Missão</h3>
+    <table class="who-table">
+      <thead><tr><th>Nome</th><th>Papel</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Renan Santos</td><td>Cofundador do MBL (2014); presidente do Partido Missão; candidato a presidente em 2026</td></tr>
+        <tr><td class="name">Kim Kataguiri</td><td>Cofundador do MBL; principal porta-voz histórico do movimento; hoje vice-presidente do Missão</td></tr>
+        <tr><td class="name">Fernando Holiday</td><td>Cofundador do MBL</td></tr>
+        <tr><td class="name">Rubinho Nunes</td><td>Cofundador do MBL</td></tr>
+        <tr><td class="name">Aroldo Medina</td><td>Tenente-coronel; vice na chapa presidencial de Renan Santos em 2026</td></tr>
+        <tr><td class="name">Rafael Rizzo / Ian Garcez</td><td>Vice-presidentes do Partido Missão</td></tr>
+        <tr><td class="name">Victor Couto</td><td>Secretário-geral do Partido Missão</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 8</p>
+    <h2 class="chapter__title">De Aliados a Inimigos</h2>
+    <div class="chapter__body">
+      <p>Em 2018, no auge da onda bolsonarista, o MBL apoia publicamente a candidatura de Jair Bolsonaro. É o ponto mais próximo entre o movimento de Renan Santos e o bolsonarismo em toda essa história.<span class="note-inline">[6]</span></p>
+      <p>Dura pouco.</p>
+      <p>Já em 2019 — ainda no primeiro ano do novo governo —, Renan Santos publica, nas redes sociais, o termo que vai se tornar sua marca intelectual: "bolsopetismo". A ideia: petismo e bolsonarismo, apesar de se apresentarem como opostos irreconciliáveis, operariam pela mesma lógica de prática política — "mudando as cores, a receita é a mesma."<span class="note-inline">[7]</span></p>
+      <p>Ainda não é ruptura pessoal. É ruptura de tese.</p>
+      <p>A ruptura pessoal vem com a pandemia. Em 2020 e 2021, Renan Santos passa a criticar publicamente e com dureza a gestão federal da crise sanitária — em especial o atraso na aquisição e distribuição de vacinas —, chegando a escrever, em artigo de opinião assinado, que o governo apostava contra a própria vacinação.<span class="note-inline">[8]</span></p>
+      <p>Reportagens da imprensa — inclusive de veículos de linha editorial oposta à do MBL, como o The Intercept Brasil — passam a registrar, já em 2021, sinais de desgaste crescente entre o movimento e o entorno bolsonarista.<span class="note-inline">[9]</span></p>
+      <p>Em 2022, segundo relatos posteriores do próprio grupo — incluindo entrevistas de Kim Kataguiri —, a ruptura entre o MBL e Jair Bolsonaro se torna definitiva.<span class="note-inline">[10]</span></p>
+      <p>O movimento que nasceu para lutar contra o PT termina a década seguinte em guerra aberta com o homem que, em 2018, ajudou a eleger.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Linha do tempo visual</span>
+    <h3 class="insert__title">MBL × Bolsonaro: de aliados a inimigos</h3>
+    <ul class="timeline">
+      <li><span class="yr">2013</span><span class="ev">Jornadas de Junho — Renan Santos ganha notoriedade</span></li>
+      <li><span class="yr">2014</span><span class="ev">Fundação do MBL</span></li>
+      <li><span class="yr">2015–2016</span><span class="ev">Campanha pelo impeachment de Dilma; Marcha pela Liberdade</span></li>
+      <li><span class="yr">2018</span><span class="ev">MBL apoia Bolsonaro — ponto de maior proximidade</span></li>
+      <li><span class="yr">2019</span><span class="ev">Renan cunha "bolsopetismo" — ruptura de tese</span></li>
+      <li><span class="yr">2020–2021</span><span class="ev">Críticas duras à gestão da pandemia — ruptura pessoal em construção</span></li>
+      <li><span class="yr">2022</span><span class="ev">Ruptura definitiva</span></li>
+      <li><span class="yr">2023</span><span class="ev">Fundação do Partido Missão</span></li>
+    </ul>
+  </div>
+
+  <div class="source-list">
+    <h4>Fontes do capítulo</h4>
+    <ol>
+      <li>[1] Contexto documentado das Jornadas de Junho de 2013.</li>
+      <li>[2] ND Mais, "Renan Santos: a trajetória política do presidente do Missão"; InfoMoney, "Quem é Renan Santos".</li>
+      <li>[3] Investidor10, "Renan Santos: trajetória, atuação política e influência no cenário brasileiro".</li>
+      <li>[4][5] ND Mais; InfoMoney; NSC Total, "Eleições 2026: quem é Renan Santos".</li>
+      <li>[6] Gazeta do Povo, "MBL tenta resgatar influência após polêmicas e ruptura com bolsonarismo".</li>
+      <li>[7] Renan Santos, X/Twitter (@renansantosmbl), 2019.</li>
+      <li>[8] Gazeta do Povo (coluna de Renan Santos), "Bolsonaro quer vírus contra vacina".</li>
+      <li>[9] The Intercept Brasil, "MBL jura que abandonou o bolsonarismo, mas o bolsonarismo não abandonou o MBL", 13/06/2021.</li>
+      <li>[10] NC News, entrevista com Kim Kataguiri, 05/08/2026; IstoÉ, "Kim Kataguiri: 'A direita está abandonando Bolsonaro'".</li>
+    </ol>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PULL QUOTE -->
+<!-- ============================================================ -->
+<section class="pullpage reveal">
+  <div class="pullpage__mark" aria-hidden="true">"</div>
+  <p class="pullpage__text">Bolsopetismo é o termo ideal para definir um tipo de prática e militância política que extrapolam os limites da questão ideológica. Mudando as cores, a receita é a mesma.</p>
+  <p class="pullpage__attr">Renan Santos<span>X/Twitter (@renansantosmbl) · 2019</span></p>
+</section>
+
+<!-- ============================================================ -->
+<!-- PARTE IV -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte4">
+  <p class="part__num">Parte IV</p>
+  <h2 class="part__title">Renan <em>Santos</em></h2>
+  <p class="part__desc">O centro emocional deste livro. Quem é, por que rompeu, o que defende — nas próprias palavras dele.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 9</p>
+    <h2 class="chapter__title">Quem é Renan Santos?</h2>
+    <div class="chapter__body">
+      <p>Há duas versões públicas de Renan Santos, e as duas são verdadeiras ao mesmo tempo.</p>
+      <p>A primeira é a do organizador. O rapaz da Mooca que largou a faculdade de Direito na USP para trabalhar com o pai, entrou para o PSDB ainda jovem, saiu do partido para fundar um movimento de rua, e passou a década seguinte estruturando diretórios, desenhando campanhas e liderando marchas de mil quilômetros.<span class="note-inline">[1]</span> É o Renan que aparece nos bastidores — nas atas, nas reuniões de coordenação, nos comitês.</p>
+      <p>A segunda é a do comunicador. Vídeos curtos no TikTok e no Instagram. Conteúdo longo no YouTube. Debates diários no X. É guitarrista da banda Limão Rosa nas horas vagas — um detalhe que ele mesmo faz questão de manter público, como quem lembra ao eleitor que existe uma pessoa antes do personagem político.<span class="note-inline">[2]</span></p>
+      <p>As duas versões se encontram num único projeto: transformar um movimento de rua em partido, e um partido em candidatura presidencial.</p>
+      <p>Poucos brasileiros que fundaram um movimento de protesto em 2014 chegaram, doze anos depois, à cédula de votação para presidente. Renan Santos chegou — pela primeira vez na vida disputando um cargo eletivo qualquer, aos 42 anos.<span class="note-inline">[3]</span></p>
+      <p>O que o levou até aqui não foi uma linha reta. Foi uma sequência de rupturas.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 10</p>
+    <h2 class="chapter__title">A Ruptura</h2>
+    <div class="chapter__body">
+      <p>Por que um dos fundadores do MBL — movimento que ajudou a eleger Jair Bolsonaro em 2018 — passou a tratar o bolsonarismo como parte do problema que sempre disse combater?</p>
+      <p>A resposta pública de Renan Santos começa antes da pandemia, mas se intensifica com ela.</p>
+      <p>Em 2019, ainda no primeiro ano do governo Bolsonaro, ele já usa as redes para separar sua posição da do novo presidente em pontos específicos. A crítica formal — o rótulo "bolsopetismo" — nasce nesse momento.</p>
+      <p>Mas é na pandemia que a ruptura ganha corpo público, com nome e sobrenome. Em artigo de opinião assinado, publicado com o título "Bolsonaro quer vírus contra vacina", Renan atribui à Presidência da República responsabilidade direta pelos atrasos na aquisição e distribuição de imunizantes, caracterizando a postura do governo como uma aposta contra a própria vacinação da população.<span class="note-inline">[4]</span></p>
+      <p>Não é uma crítica pontual de política pública. É uma acusação de que o chefe do Executivo colocava em risco vidas por cálculo político.</p>
+      <p>Em entrevistas mais recentes, já em 2026, Renan afirma não se retratar do conteúdo dessas críticas — mas reconhece ter "exagerado" na forma em alguns momentos daquele período.<span class="note-inline">[5]</span> É uma distinção que ele mesmo faz questão de marcar: errei no tom, não errei no diagnóstico.</p>
+      <p>Reportagens da imprensa — inclusive de veículos com linha editorial oposta à do MBL — já registravam, em 2021, esse desgaste crescente entre o movimento e o entorno de Bolsonaro.<span class="note-inline">[6]</span> Em 2022, segundo o próprio grupo, a ruptura se torna definitiva.</p>
+      <p>O que resta, depois da ruptura, não é apenas uma crítica a Bolsonaro. É uma tese sobre como Bolsonaro e o PT — adversários declarados um do outro — funcionariam, na visão de Renan, pela mesma lógica.</p>
+      <p>Essa tese tem nome.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 11</p>
+    <h2 class="chapter__title">Bolsopetismo</h2>
+    <div class="chapter__body">
+      <p>Em 2019, num post no X (então Twitter), Renan Santos escreveu:</p>
+      <blockquote>"Bolsopetismo é o termo ideal para definir um tipo de prática e militância política que extrapolam os limites da questão ideológica. O bolsopetismo é uma sequência histórica, de sinal trocado. Mudando as cores, a receita é a mesma."<span class="note-inline">[7]</span></blockquote>
+      <p>A tese, resumida: apesar da hostilidade mútua entre petismo e bolsonarismo — apesar de cada lado tratar o outro como inimigo existencial —, os dois operariam, na leitura de Renan, por mecanismos parecidos de mobilização, de "nós contra eles", de uso do assistencialismo ou do discurso antissistema para fidelizar apoio, sem que isso, necessariamente, resolva os problemas estruturais do país.</p>
+      <p>Em textos posteriores, ele reforça a ideia — chegando a colocar lulismo, bolsonarismo e o Centrão no mesmo patamar de crítica, com a síntese de que os projetos "têm que ir para a lata de lixo da história juntos" (formulação de cobertura jornalística, a confirmar literalmente contra fala primária).<span class="note-inline">[8]</span></p>
+      <p>É importante marcar uma coisa sobre a cronologia: o termo é de 2019. Sete anos antes da candidatura de 2026. Isso pesa a favor de uma leitura específica — a de que a tese de Renan não foi desenhada como estratégia de campanha, mas vinha sendo construída havia quase uma década antes de virar projeto eleitoral.</p>
+      <p>Dito isso, "bolsopetismo" não é um conceito da ciência política — é uma cunhagem própria de Renan Santos, um enquadramento político, não uma categoria acadêmica validada. Vale aqui a mesma cautela do Capítulo 2: assim como o "Teatro das Tesouras" da Brasil Paralelo é uma interpretação de uma produtora de linha editorial identificável, o "bolsopetismo" é uma interpretação do próprio candidato sobre seus adversários — poderosa como narrativa de campanha, mas não comprovável como fato objetivo.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Fato ou interpretação?</span>
+    <div class="facts-grid">
+      <div class="fact-card">
+        <h5>Fato</h5>
+        <ul><li>Renan Santos cunhou o termo "bolsopetismo" em 2019 e o usa publicamente desde então.</li></ul>
+      </div>
+      <div class="fact-card hyp">
+        <h5>Interpretação (de Renan)</h5>
+        <ul><li>PT e bolsonarismo operam pela "mesma receita" política.</li></ul>
+      </div>
+      <div class="fact-card unknown">
+        <h5>O que não sabemos</h5>
+        <ul><li>Se a tese é compartilhada de forma sistemática por analistas independentes, ou se é majoritariamente autoral.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 12</p>
+    <h2 class="chapter__title">Partido Missão</h2>
+    <div class="chapter__body">
+      <p>Em 17–18 de outubro de 2023, Renan Santos e aliados do MBL formalizam a criação do Partido Missão — a institucionalização, em legenda própria, de quase dez anos de atuação como movimento social.<span class="note-inline">[9]</span></p>
+      <p>Em 4 de novembro de 2025, o TSE homologa a nova sigla: a 30ª legenda apta a disputar eleições no Brasil, sob o número 14.<span class="note-inline">[9]</span></p>
+      <p>A liderança do partido reúne nomes que vêm quase todos do MBL: Renan Santos na presidência; Kim Kataguiri, Rafael Rizzo e Ian Garcez nas vice-presidências; Victor Couto na secretaria-geral.<span class="note-inline">[10]</span></p>
+      <p>O programa — batizado internamente de "Livro Amarelo" — assume abertamente uma inspiração: Javier Milei, o presidente argentino que chegou ao poder prometendo corte radical de gastos públicos e confronto direto com o que chama de "casta política".<span class="note-inline">[11][12]</span></p>
+      <p>As propostas incluem: redução do Estado com exceções estratégicas; endurecimento penal e "guerra ao crime organizado"; fusão de municípios financeiramente deficitários; industrialização do Nordeste; reserva em Bitcoin; defesa declarada de "valores greco-romanos e judaico-cristãos clássicos".<span class="note-inline">[11][13]</span></p>
+      <p>Em entrevistas e material de campanha, Renan detalha propostas específicas — incluindo a defesa de superpresídios, intervenção federal em estados com índices altos de criminalidade organizada, e mudanças na política social, com críticas diretas a programas como o Bolsa Família.<span class="note-inline">[14]</span></p>
+      <p>É um programa de direita, mas deliberadamente distinto tanto do bolsonarismo quanto do establishment político tradicional — o próprio Renan descreve sua candidatura como alternativa a ambos os polos que, segundo sua tese do bolsopetismo, dominam o debate público brasileiro.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Documento</span>
+    <h3 class="insert__title">O "Livro Amarelo"</h3>
+    <dl class="doc-box">
+      <dt>O que é</dt><dd>Nome interno dado por Renan Santos ao documento-doutrina que fundamenta o programa do Partido Missão.</dd>
+      <dt>Quando foi publicado</dt><dd>Material de campanha, 2025–2026 (data exata em checagem).</dd>
+      <dt>Por que importa</dt><dd>É a fonte primária mais direta para entender o programa de governo proposto — deve ser citado em trechos, não resumido de segunda mão, sempre que uma proposta específica for descrita.</dd>
+    </dl>
+  </div>
+
+  <div class="source-list">
+    <h4>Fontes do capítulo</h4>
+    <ol>
+      <li>[1] Ver Capítulo 7. [2] InfoMoney, "Quem é Renan Santos". [3] NSC Total, "Eleições 2026: quem é Renan Santos".</li>
+      <li>[4] Gazeta do Povo (coluna de Renan Santos), "Bolsonaro quer vírus contra vacina".</li>
+      <li>[5] Entrevistas de Renan Santos em 2026 (checar transcrição literal).</li>
+      <li>[6] The Intercept Brasil, 13/06/2021.</li>
+      <li>[7] Renan Santos, X/Twitter (@renansantosmbl), 2019.</li>
+      <li>[8] CNN Brasil (blog, Caio Junqueira), "Lulismo e bolsonarismo viram alvo comum em ato de Renan Santos".</li>
+      <li>[9][10] Wikipédia (PT/EN), "Partido Missão" / "Mission Party (Brazil)".</li>
+      <li>[11] Jota, "De Vargas a Milei, plano de Renan Santos propõe ampla reforma do Estado"; [12] Agência Pública, 07/2026.</li>
+      <li>[13] Gazeta do Povo, "Economia: O que Renan Santos promete em seu plano de governo".</li>
+      <li>[14] Gazeta do Povo, "Renan Santos propõe 'desfavelização', superpresídios e fim do Bolsa Família".</li>
+    </ol>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE V — 2026 -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte5">
+  <p class="part__num">Parte V</p>
+  <h2 class="part__title">2026</h2>
+  <p class="part__desc">A parte mais documentada deste livro. Um candidato, dois alvos, um sistema que trava.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 13</p>
+    <h2 class="chapter__title">Renan Entra na Corrida</h2>
+    <div class="chapter__body">
+      <p>Em 20 de julho de 2026, uma convenção virtual do Partido Missão oficializa a chapa presidencial: Renan Santos para presidente, o tenente-coronel Aroldo Medina para vice.<span class="note-inline">[1]</span></p>
+      <p>Renan é o primeiro presidenciável do ciclo a ter o nome formalmente definido para a disputa — antes de Lula confirmar reeleição, antes de Flávio Bolsonaro fechar sua chapa.<span class="note-inline">[1]</span></p>
+      <p>Em 1º de agosto, o partido confirma a candidatura publicamente, com discurso de lançamento marcado por críticas simultâneas a Lula e aos Bolsonaro — o mesmo padrão de ataque duplo que vai se repetir, com intensidade crescente, ao longo de toda a campanha.<span class="note-inline">[2]</span></p>
+      <p>Ao TSE, Renan declara patrimônio de R$ 795,1 mil.<span class="note-inline">[3]</span> É a primeira vez, aos 42 anos, que ele disputa qualquer cargo eletivo — depois de mais de uma década construindo poder político fora das urnas, como organizador de movimento e depois como dirigente partidário.</p>
+      <p>A pergunta que se impõe, a partir daqui, não é mais só "o que Renan Santos pensa". É "o que a candidatura de Renan Santos faz" — ao debate público, e à disputa entre os outros dois campos.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 14</p>
+    <h2 class="chapter__title">Renan Contra Flávio</h2>
+    <div class="chapter__body">
+      <p>Antes de qualquer episódio institucional, houve palavras. E as palavras, neste caso, escalaram rápido.</p>
+      <p>Numa transmissão ao vivo — a data exata ainda não pôde ser confirmada com precisão entre as fontes consultadas: dezembro de 2024, segundo uma reportagem; dezembro de 2025, segundo outra<span class="note-inline">[4]</span> —, Renan Santos disse, sobre Flávio Bolsonaro:</p>
+      <blockquote>"O traíra tem de morrer. O traíra é Flávio Bolsonaro, ele precisa ser destruído. Eu vou acabar com a raça do Flávio Bolsonaro."<span class="note-inline">[4][5]</span></blockquote>
+      <p>A fala viralizou na semana de 31 de janeiro de 2026. Diante da repercussão, Renan esclareceu:</p>
+      <blockquote>"Eu disse que ele tem que morrer politicamente."<span class="note-inline">[5]</span></blockquote>
+      <p>Não recuou do conteúdo. Reiterou as acusações contra Flávio — envolvimento no escândalo das "rachadinhas", proximidade com investigações sobre milícias — e chamou o senador de "um câncer para a política brasileira".<span class="note-inline">[5]</span> Sobre seu próprio papel, resumiu: "Minha função histórica não é só acabar com a esquerda, mas com a roubalheira."<span class="note-inline">[5]</span></p>
+      <p>Vale registrar, com o mesmo cuidado que se dá à fala em si: "acabar com a raça de alguém" é uma expressão comum no português coloquial brasileiro, usada correntemente como sinônimo de "derrotar" ou "arrasar" — não é, em si, uma ameaça literal. Mas a frase "tem de morrer", sem qualificação na fala original, foi ambígua o bastante para gerar repercussão negativa real. Essa reação — não uma suposta "intenção oculta" que este livro não tem como comprovar — é o fato jornalístico relevante aqui.</p>
+      <p>Meses depois, em 13 de agosto de 2026, no Fórum Caminho da Liberdade, em São Paulo, Renan voltou ao ataque, agora sem o verbo mais pesado, mas com o mesmo alvo:</p>
+      <blockquote>"[...] de um farsante, de uma família de farsantes que enganou o Brasil produtivo [...]. Estamos reféns de um Lula que está em primeiro nas pesquisas e, do outro lado, de um farsante [...]"<span class="note-inline">[6]</span></blockquote>
+      <p>Dez dias depois desse discurso, o conflito deixaria de ser só verbal.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Renan disse × Flávio respondeu</span>
+    <h3 class="insert__title">O confronto, com fonte</h3>
+    <div class="faceoff">
+      <div class="faceoff__col renan">
+        <h5>Renan disse</h5>
+        <div class="say"><p>"O traíra tem de morrer. [...] Eu vou acabar com a raça do Flávio Bolsonaro."</p><cite>ND Mais / O Tempo — dez/2024 ou dez/2025 (data em checagem), viralizado 31/01/2026</cite></div>
+        <div class="say"><p>"Eu disse que ele tem que morrer politicamente." (esclarecimento)</p><cite>O Tempo, 31/01/2026</cite></div>
+        <div class="say"><p>"[...] de um farsante, de uma família de farsantes que enganou o Brasil produtivo [...]"</p><cite>CNN Brasil, 13/08/2026</cite></div>
+        <div class="say"><p>"Com um país completamente em crise, esses 2 criminosos não vieram ao debate [...] Covardes e canalhas."</p><cite>O Tempo, 23/08/2026</cite></div>
+      </div>
+      <div class="faceoff__col flavio">
+        <h5>Flávio respondeu</h5>
+        <div class="say"><p>Classificou o episódio da filiação (Cap. 15) como fraude; disse em vídeo que "o sistema vai tentar de tudo" para detê-lo, mas que "Deus está no comando".</p><cite>Brasil de Fato, 14–19/08/2026</cite></div>
+        <div class="say pending"><p>Resposta pública e direta à fala "o traíra tem de morrer" — não localizada nesta pesquisa.</p><cite>Pendente — buscar antes do fechamento</cite></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 15</p>
+    <h2 class="chapter__title">O Sistema Trava</h2>
+    <div class="chapter__body">
+      <p>Doze de agosto de 2026. Uma certidão do Tribunal Superior Eleitoral aponta algo estranho: Flávio Bolsonaro consta como filiado — "regularmente", segundo o próprio sistema — ao Partido Missão, no Rio de Janeiro.<span class="note-inline">[7][8]</span></p>
+      <p>Não ao PL, o partido pelo qual ele de fato pretende concorrer.</p>
+      <p>Na manhã seguinte, 13 de agosto, a equipe jurídica do PL tenta protocolar o registro da candidatura de Flávio e não consegue: o sistema do TSE não reconhece a filiação ao PL, porque, para o sistema, Flávio já está em outra legenda.<span class="note-inline">[7][8]</span></p>
+      <p>À tarde do mesmo dia, o TSE suspende todo o sistema de filiação partidária, ao identificar que houve alterações indevidas. O tribunal é categórico num ponto: não houve invasão externa, "hackeamento" — houve uso indevido de credenciais de acesso pertencentes ao próprio Partido Missão.<span class="note-inline">[7][8]</span></p>
+      <p>Às 19h43 daquele mesmo dia, o ministro Kassio Nunes Marques, presidente do TSE, determina o restabelecimento imediato da filiação de Flávio ao PL — com efeito retroativo a 30 de novembro de 2021, data original de sua filiação — e libera o registro da candidatura, com o deputado federal Alfredo Gaspar como vice.<span class="note-inline">[7][8]</span></p>
+      <p>O ministro determina ainda: abertura de inquérito pela Polícia Judiciária Eleitoral, representação ao Ministério Público Eleitoral, e apuração de eventuais tentativas semelhantes contra outros candidatos presidenciais.<span class="note-inline">[7]</span></p>
+      <p>Nos dias seguintes, as duas versões do episódio se afastam uma da outra.</p>
+      <p><strong>A versão do PL e de Flávio Bolsonaro:</strong> trata-se de fraude, uma tentativa deliberada de impedir seu registro como candidato. Em vídeo nas redes sociais, Flávio afirmou: "o sistema vai tentar de tudo" para detê-lo — "mas Deus está no comando".<span class="note-inline">[8]</span></p>
+      <p><strong>A versão do Partido Missão e de Renan Santos:</strong> o partido nega qualquer responsabilidade e se declara, ele mesmo, vítima de uma "tentativa de filiação fraudulenta" — alegando que seu próprio sistema identificou o erro e tentou cancelar a filiação no mesmo dia, mas que o TSE não aceitou o cancelamento a tempo. Segundo o Missão, a assessoria de Flávio já teria sido avisada do problema por e-mail em 2 de agosto — dez dias antes da crise pública se tornar visível — mas as mensagens, embora abertas, não teriam sido respondidas.<span class="note-inline">[9]</span> Renan Santos, em entrevista posterior, negou publicamente qualquer fraude por parte de seu partido.<span class="note-inline">[10]</span></p>
+      <p>Em 18 de agosto, a Polícia Federal abre inquérito próprio, por determinação do TSE, especificamente para apurar quem realizou a filiação e com que intenção. O crime sob investigação é a inserção de dados falsos em sistema de informações — artigo 313-A do Código Penal, pena de 2 a 12 anos de prisão.<span class="note-inline">[11][12]</span></p>
+      <p>Um dado adicional, revelado dias depois: autoridades identificaram que o autor da alteração — via log de acesso, local e horário — é "um filiado com função diretiva" dentro do Partido Missão. Ou seja, alguém de dentro da própria legenda de Renan Santos, com credenciais de acesso ao sistema partidário.<span class="note-inline">[13]</span></p>
+      <p><strong>O nome dessa pessoa não foi divulgado publicamente até o fechamento desta pesquisa (25 de agosto de 2026).</strong> Não se sabe se agiu sozinho, por conta própria, a mando de alguém, ou se há uma explicação ainda não pública para o episódio.</p>
+      <p>Isso é o que se sabe. O resto é hipótese — e é assim que este livro vai tratá-lo.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">O que sabemos / o que não sabemos / a hipótese</span>
+    <div class="facts-grid">
+      <div class="fact-card">
+        <h5>O que sabemos</h5>
+        <ul>
+          <li>O sistema do TSE registrou Flávio como filiado ao Missão, travando seu registro pelo PL.</li>
+          <li>Não houve invasão externa — a alteração foi feita com credenciais legítimas do Missão.</li>
+          <li>O autor tem, segundo apuração preliminar, função diretiva no partido.</li>
+          <li>Há dois inquéritos abertos, sem conclusão pública até 25/08/2026.</li>
+        </ul>
+      </div>
+      <div class="fact-card unknown">
+        <h5>O que não sabemos</h5>
+        <ul>
+          <li>A identidade de quem fez a alteração.</li>
+          <li>Se houve dolo ou uso indevido por outro motivo.</li>
+          <li>Qualquer ligação com a liderança do partido, incluindo Renan Santos — inexistente nas fontes consultadas.</li>
+          <li>O resultado final das investigações.</li>
+        </ul>
+      </div>
+      <div class="fact-card hyp">
+        <h5>A hipótese</h5>
+        <ul><li>O episódio, independentemente de sua origem, causou desgaste público e atraso concreto ao principal rival de Renan Santos no campo de direita — um <em>efeito possível</em>, não uma <em>intenção comprovada</em>.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 16</p>
+    <h2 class="chapter__title">A Matemática da Divisão</h2>
+    <div class="chapter__body">
+      <p>Números de agosto de 2026, direto dos institutos. Um padrão se repete em todos eles: Lula lidera com folga no primeiro turno; Flávio Bolsonaro é o principal opositor; e Renan Santos aparece, consistentemente, na faixa de 3% a 4%.</p>
+      <p>Não é um número que o coloca no páreo pela Presidência. Mas é um número que levanta uma pergunta específica, que nenhuma das pesquisas consultadas nesta pesquisa respondeu diretamente: <strong>para onde iriam esses votos, num cenário sem a candidatura de Renan Santos?</strong></p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Gráfico 4</span>
+    <h3 class="insert__title">Pesquisas presidenciais de 2026 (agosto)</h3>
+    <div class="chart-box">
+      <svg viewBox="0 0 560 260" role="img" aria-label="Comparação de Lula, Flávio Bolsonaro e Renan Santos em quatro institutos de agosto de 2026">
+        <line x1="140" y1="20" x2="140" y2="230" stroke="#c9b98e" stroke-width="1"/>
+        <!-- Palver -->
+        <text x="10" y="34" font-family="Space Mono" font-size="11" fill="#4a4030">Palver</text>
+        <text x="10" y="46" font-family="Space Mono" font-size="8" fill="#8a7e63">03–07/08</text>
+        <rect x="140" y="24" width="176" height="14" fill="#7c1f26"/><text x="322" y="35" font-family="Space Mono" font-size="10" fill="#201a13">44% Lula</text>
+        <rect x="140" y="40" width="160" height="14" fill="#b98a3d"/><text x="306" y="51" font-family="Space Mono" font-size="10" fill="#201a13">40% Flávio</text>
+        <!-- BTG/Nexus -->
+        <text x="10" y="88" font-family="Space Mono" font-size="11" fill="#4a4030">BTG/Nexus</text>
+        <text x="10" y="100" font-family="Space Mono" font-size="8" fill="#8a7e63">31/07–02/08</text>
+        <rect x="140" y="78" width="164" height="14" fill="#7c1f26"/><text x="310" y="89" font-family="Space Mono" font-size="10" fill="#201a13">41% Lula</text>
+        <rect x="140" y="94" width="148" height="14" fill="#b98a3d"/><text x="294" y="105" font-family="Space Mono" font-size="10" fill="#201a13">37% Flávio</text>
+        <rect x="140" y="110" width="16" height="14" fill="#4a4030"/><text x="162" y="121" font-family="Space Mono" font-size="10" fill="#201a13">4% Renan</text>
+        <!-- PoderData -->
+        <text x="10" y="152" font-family="Space Mono" font-size="11" fill="#4a4030">PoderData</text>
+        <text x="10" y="164" font-family="Space Mono" font-size="8" fill="#8a7e63">09–12/08</text>
+        <rect x="140" y="142" width="164" height="14" fill="#7c1f26"/><text x="310" y="153" font-family="Space Mono" font-size="10" fill="#201a13">41% Lula</text>
+        <rect x="140" y="158" width="140" height="14" fill="#b98a3d"/><text x="286" y="169" font-family="Space Mono" font-size="10" fill="#201a13">35% Flávio</text>
+        <!-- Genial/Quaest -->
+        <text x="10" y="206" font-family="Space Mono" font-size="11" fill="#4a4030">Genial/Quaest</text>
+        <rect x="140" y="196" width="12" height="14" fill="#4a4030"/><text x="158" y="207" font-family="Space Mono" font-size="10" fill="#201a13">3% Renan (empate técnico c/ Caiado)</text>
+        <line x1="140" y1="230" x2="500" y2="230" stroke="#c9b98e" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#7c1f26"></span>Lula</span>
+      <span><span class="swatch" style="background:#b98a3d"></span>Flávio Bolsonaro</span>
+      <span><span class="swatch" style="background:#4a4030"></span>Renan Santos</span>
+    </div>
+    <p class="chart-caption">Números conforme divulgados pela cobertura de cada instituto (ver fontes do capítulo). Ficha técnica completa — contratante, amostra, margem de erro, registro TSE — pendente de confirmação direta no site de cada instituto antes do fechamento editorial.</p>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 17</p>
+    <h2 class="chapter__title">Para Onde Vão os Votos de Renan?</h2>
+    <div class="chapter__body">
+      <p>A resposta honesta é: não sabemos, com os dados públicos disponíveis nesta pesquisa.</p>
+      <p>Nenhuma das pesquisas eleitorais consultadas testou diretamente um cenário de segundo turno simulado excluindo Renan Santos, nem perguntou explicitamente ao eleitorado dele qual seria o voto alternativo caso o candidato do Missão não estivesse na disputa.</p>
+      <p>O que existe é inferência indireta, e ela deve ser tratada como tal: os institutos que testam Renan Santos o posicionam claramente no campo de direita/centro-direita, o que sugere, sem provar, que uma fatia relevante de seu eleitorado tenderia a se dividir entre abstenção, voto nulo/branco ou transferência para Flávio Bolsonaro — mas também é plausível que parte desse eleitorado, atraído especificamente pelo discurso antissistema de Renan e não por uma identidade "de direita" convencional, simplesmente não vote em nenhum dos dois polos principais.</p>
+      <p>Este é, deliberadamente, o capítulo mais curto do livro. Não porque o tema seja menos importante — é o contrário: é porque a honestidade metodológica exige reconhecer o limite dos dados, em vez de preenchê-lo com suposição.</p>
+    </div>
+  </div>
+
+  <div class="scdiv" aria-hidden="true"><span class="line"></span><svg viewBox="0 0 24 24"><g stroke="#7c1f26" stroke-width="1.6" fill="none"><path d="M4 4 L20 20"/><path d="M4 20 L20 4"/></g></svg><span class="line"></span></div>
+
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 18</p>
+    <h2 class="chapter__title">Quem Ganha Quando a Direita Briga?</h2>
+    <div class="chapter__body">
+      <p>Três cenários, nenhum deles uma previsão:</p>
+      <p><strong>Cenário 1 — Fragmentação sem efeito relevante.</strong> O eleitorado de Renan Santos é pequeno o suficiente (3–4%) e ideologicamente distinto o suficiente do eleitorado de Flávio Bolsonaro para que sua saída da disputa não alterasse de forma significativa o resultado do primeiro turno.</p>
+      <p><strong>Cenário 2 — Fragmentação com efeito marginal, mas decisivo em cenário apertado.</strong> Se a distância entre Lula e Flávio Bolsonaro permanecer estreita — como sugerem as pesquisas de agosto —, mesmo um deslocamento parcial dos votos de Renan poderia, em tese, influenciar quem avança ao segundo turno em segundo lugar, ou a margem de vitória de Lula.</p>
+      <p><strong>Cenário 3 — Efeito predominantemente simbólico e de desgaste, não numérico.</strong> Independentemente do resultado nas urnas, os ataques recíprocos entre Renan e Flávio — e episódios como o da filiação no TSE — consomem tempo de cobertura, energia de campanha e capital político de ambos os lados de direita, com benefício reputacional indireto para o campo adversário.</p>
+      <p>Nenhum desses cenários exige que exista coordenação entre Renan Santos e o campo petista. Todos os três são compatíveis com a hipótese mais simples: dois candidatos de direita competindo pelo mesmo espaço político, com efeitos colaterais sobre o campo que ambos dizem representar.</p>
+      <p>É essa mecânica — não uma conspiração — que este livro chama, no título, de "o novo teatro das tesouras". A pergunta que resta é se essa comparação se sustenta, ou se é forçada demais.</p>
+    </div>
+  </div>
+
+  <div class="source-list">
+    <h4>Fontes do capítulo</h4>
+    <ol>
+      <li>[1] Caminho da Missão, "Renan Santos 14, candidato a Presidente em 2026 — Registro no TSE".</li>
+      <li>[2] Brasil de Fato, 01/08/2026; CNN Brasil, "Renan lança candidatura ao Planalto com críticas a Lula e aos Bolsonaros".</li>
+      <li>[3] Terra, "Eleições 2026: quem é Renan Santos e quanto ele declarou de patrimônio ao TSE".</li>
+      <li>[4][5] ND Mais, "Quem é Renan Santos, que disse que Flávio Bolsonaro 'tem de morrer'"; O Tempo, 31/01/2026.</li>
+      <li>[6] CNN Brasil, "Renan chama Flávio de 'farsante' e critica gestão de Jair Bolsonaro", 13/08/2026.</li>
+      <li>[7] CNN Brasil, "PL registra candidatura de Flávio no TSE após problemas na filiação".</li>
+      <li>[8] Brasil de Fato, 14/08/2026.</li>
+      <li>[9][13] CNN Brasil (blog, Caio Junqueira), "Autoridades informam ao PL que dirigente do Missão filiou Flávio Bolsonaro".</li>
+      <li>[10] Terra (vídeo), "Renan Santos rebate Flávio Bolsonaro e nega fraude do Missão".</li>
+      <li>[11] CNN Brasil (blog, Jussara Soares); [12] Brasil de Fato, 19/08/2026.</li>
+      <li>Pesquisas: CartaCapital (Palver); Nexus/FSB (BTG/Nexus); Gazeta do Povo (PoderData); Harvard TagTeam (Genial/Quaest).</li>
+    </ol>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE VI -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte6">
+  <p class="part__num">Parte VI</p>
+  <h2 class="part__title">A <em>Nova</em> Tesoura?</h2>
+  <p class="part__desc">Duas lâminas, outro palco. Onde a comparação se sustenta — e onde ela quebra.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 19</p>
+    <h2 class="chapter__title">Duas Lâminas, Outro Palco</h2>
+    <div class="chapter__body">
+      <p>Voltemos à imagem do prólogo.</p>
+      <p>Duas lâminas que se movem em direções opostas — e é justamente esse desencontro que produz o corte.</p>
+      <p>O "teatro" de 1994 a 2014 tinha PT de um lado, PSDB do outro. Hostilidade pública declarada, seis eleições seguidas, o mesmo padrão se repetindo.</p>
+      <p>2026 tem outra configuração. Lula, do PT, segue sendo uma das lâminas. Mas a outra não é mais uma legenda única — é um campo de direita rachado entre pelo menos dois nomes que se atacam com uma dureza incomum entre membros do mesmo espectro ideológico: Flávio Bolsonaro e Renan Santos.</p>
+      <p>Vale comparar com cuidado — sem forçar a analogia.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">Semelhanças, diferenças, evidências, contradições</span>
+    <h3 class="insert__title">Teatro original × 2026</h3>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h5>Semelhanças</h5>
+        <ul>
+          <li>Dois lados que se apresentam como opostos ocupam o centro da atenção, deixando pouco espaço para terceiras vias.</li>
+          <li>O desgaste mútuo beneficia, ao menos potencialmente, quem está fora dessa disputa direta.</li>
+          <li>O público tem dificuldade de separar retórica de estratégia.</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h5>Diferenças</h5>
+        <ul>
+          <li>O teatro original era entre dois partidos estabelecidos, com décadas de estrutura. 2026 tem um partido centenário em crise (PSDB, fora da disputa) e dois projetos de direita relativamente recentes.</li>
+          <li>A tese de 1994–2014 é leitura <em>a posteriori</em>. A de 2026 está sendo documentada em tempo real.</li>
+          <li>Não há, em 2026, evento equivalente à "chapa unificada" de 2022 que ligue Renan Santos ao campo petista.</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h5>Evidências</h5>
+        <ul>
+          <li>A favor do efeito de "nova tesoura": a matemática de 1º turno, a concentração dos ataques mais duros sobre Flávio, o desgaste real do episódio da filiação.</li>
+          <li>Contra: a coerência ideológica de longo prazo, o ataque simétrico a Lula, a ausência de evidência de coordenação com o PT.</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h5>Contradições</h5>
+        <ul>
+          <li>A mesma pessoa que despreza o sistema o bastante para fundar um partido do zero é quem, na aritmética das pesquisas, mais diretamente disputa espaço com o bolsonarismo — o campo que diz combater com mais urgência.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter reveal" style="margin-top:2.6rem">
+    <div class="chapter__body">
+      <p>Isso não prova má-fé. Prova, no mínimo, que consequência eleitoral e intenção declarada podem apontar para direções diferentes — e que é perfeitamente possível alguém ser sincero na tese e, ainda assim, produzir, na prática, um efeito que essa mesma tese não previa nem deseja.</p>
+      <p>É essa tensão — não uma acusação — que o próximo capítulo coloca em julgamento.</p>
+    </div>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARTE VII -->
+<!-- ============================================================ -->
+<section class="part reveal" id="parte7">
+  <p class="part__num">Parte VII</p>
+  <h2 class="part__title">O Julgamento do <em>Leitor</em></h2>
+  <p class="part__desc">Não há veredito aqui. Há um tribunal — e o júri é você.</p>
+  <svg class="part__scissors" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#b98a3d" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M14 14 L48 48"/><path d="M14 50 L48 16"/></g><circle cx="10" cy="12" r="5" stroke="#b98a3d" stroke-width="2.4"/><circle cx="10" cy="52" r="5" stroke="#b98a3d" stroke-width="2.4"/></svg>
+</section>
+
+<div class="sheet-wrap">
+<article class="sheet grain">
+  <div class="chapter reveal">
+    <p class="chapter__kicker">Capítulo 20</p>
+    <h2 class="chapter__title">Renan Está Quebrando o Sistema ou Ajudando a Mantê-lo?</h2>
+    <div class="chapter__body">
+      <p>Chegamos ao ponto em que este livro para de guiar e começa a apresentar prova.</p>
+    </div>
+  </div>
+
+  <div class="insert reveal">
+    <span class="insert__label">O tribunal das evidências</span>
+    <div class="tribunal">
+      <div class="tribunal__col for">
+        <h5>Fortalecem a tese de que ele está quebrando o sistema</h5>
+        <ol>
+          <li>"Bolsopetismo" é de 2019 — sete anos antes da candidatura. A crítica não nasceu como estratégia eleitoral.</li>
+          <li>Já rompeu, de forma documentada, com dois campos consecutivos: saiu do PSDB antes de 2015; rompeu com o bolsonarismo entre 2019 e 2022.</li>
+          <li>O programa do Missão tem propostas próprias, não é cópia do PL nem do PT.</li>
+          <li>No debate da Band, atacou Lula e Flávio com a mesma intensidade, sem poupar nenhum dos dois.</li>
+          <li>Cumpriu o rito formal de institucionalização — partido, homologação TSE, lideranças próprias.</li>
+        </ol>
+      </div>
+      <div class="tribunal__col against">
+        <h5>Enfraquecem essa tese</h5>
+        <ol>
+          <li>Nas pesquisas de agosto, aparece com 3–4% — votos que, num cenário de "voto útil" concentrado, poderiam somar-se a Flávio, embora nenhuma pesquisa tenha testado isso diretamente.</li>
+          <li>Os ataques pessoais mais duros documentados ("tem de morrer", "farsante") têm Flávio como alvo direto, com intensidade sem equivalente exato contra Lula.</li>
+          <li>O episódio da filiação gerou dano concreto e mensurável à candidatura de Flávio num momento sensível.</li>
+          <li>A escalada mais dura contra Flávio ocorre depois que ele já era o principal nome de direita nas pesquisas.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter reveal" style="margin-top:2.6rem">
+    <div class="chapter__body">
+      <p><strong>O que não entra no julgamento, porque não há prova:</strong> não há evidência documental de qualquer coordenação entre a campanha de Renan Santos e o PT ou o governo Lula; não há confirmação de quem executou a alteração de filiação no TSE, nem de sua motivação; não há dados de pesquisa que meçam diretamente a transferência de voto de Renan Santos.</p>
+      <p>Seria mais fácil — e editorialmente mais "redondo" — fechar este capítulo com uma frase de efeito. Dizer que Renan Santos é, sem querer, o novo ator de uma peça que ele mesmo diz odiar. Ou dizer o contrário: que ele é, de fato, o único candidato tentando furar um sistema comodamente polarizado.</p>
+      <p>As duas frases seriam sedutoras. Nenhuma das duas é sustentável com os dados reunidos até aqui.</p>
+      <p>O que os dados sustentam é mais modesto e, por isso mesmo, mais honesto: <strong>uma candidatura ideologicamente coerente ao longo do tempo, movida por uma tese real e documentada havia anos, que — independentemente de qualquer intenção — compete estruturalmente pelo mesmo espaço eleitoral que o principal candidato do campo que ela mesma mais ataca.</strong></p>
+      <p>Se isso é "quebrar o sistema" ou "alimentar uma nova tesoura" depende de uma coisa que nenhuma pesquisa, nenhum documento e nenhuma entrevista consultada nesta investigação consegue responder por você: o que conta mais, no fim, intenção ou consequência.</p>
+      <p>Essa resposta é sua.</p>
+    </div>
+  </div>
+</article>
+</div>
+
+<!-- ============================================================ -->
+<!-- EPÍLOGO -->
+<!-- ============================================================ -->
+<section class="closing reveal" id="epilogo">
+  <p class="part__num">Epílogo</p>
+  <div class="sheet-wrap" style="padding-top:1rem;">
+    <article class="sheet grain" style="text-align:left;">
+      <div class="chapter" style="margin-bottom:0;">
+        <div class="chapter__body">
+          <p>Toda tesoura, em algum momento, para de cortar.</p>
+          <p>As lâminas se desgastam. Ou alguém as separa. Ou aparece uma terceira ferramenta que o ofício não previa.</p>
+          <p>O Brasil já viu uma tesoura se fechar antes — em 2018, quando o PSDB, protagonista de seis eleições seguidas, caiu para 4,76% dos votos, e um outsider que passara quase três décadas como deputado de baixa expressão nacional venceu no primeiro turno. Ninguém, em 2013, teria escrito esse roteiro.</p>
+          <p>Talvez 2026 esteja escrevendo outro roteiro que ainda não sabemos ler.</p>
+          <p>O que este livro documentou, com fonte e data, é uma sequência de fatos verificáveis: um movimento de rua que ajudou a derrubar um governo e depois ajudou a eleger outro; um dos seus fundadores que rompeu com os dois lados que ajudou a construir; um partido novo, com programa próprio; uma candidatura presidencial inédita; um confronto pessoal que chegou às raias da ameaça verbal e precisou de esclarecimento público; e um episódio institucional — ainda sob investigação federal no momento em que este livro fecha — que atrasou o registro do principal rival de direita daquele candidato.</p>
+          <p>O que este livro não fez — deliberadamente — foi transformar essa sequência de fatos em veredito de intenção. Não porque faltasse tentação. Porque faltaria prova.</p>
+          <p>Fica, no entanto, uma pergunta que sobrevive a qualquer conclusão sobre motivação individual: o que acontece com um sistema político quando o espaço que antes cabia a dois grandes blocos passa a ser disputado por três, quatro, cinco candidaturas com bases sobrepostas? A fragmentação é sintoma de saúde democrática — mais opções, mais representação — ou é o palco perfeito para que o bloco mais coeso, mesmo sendo minoritário, vença por ausência de concorrência organizada do outro lado?</p>
+          <p>O futuro do Partido Missão, do bolsonarismo pós-2026 e da própria ideia de "direita brasileira" como bloco único depende, em boa parte, de como essa pergunta for respondida — nas urnas de outubro, e nos anos que vierem depois delas.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <p class="closing__q">Quantas lâminas cabem numa tesoura antes de ela parar de cortar e virar, simplesmente, um monte de metal solto?</p>
+  <p style="font-family:'Space Mono',monospace;font-size:.75rem;color:var(--paper-dim);max-width:32rem;margin:1.6rem auto 0;line-height:1.6;">Este livro será atualizado, sempre que necessário, à medida que fatos relevantes surgirem antes do fechamento da edição — em especial o resultado das investigações sobre o episódio da filiação e novas pesquisas eleitorais publicadas até outubro de 2026.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- COLOPHON / FONTES E DOCUMENTOS -->
+<!-- ============================================================ -->
+<footer class="colophon" id="fontes">
+  <div class="colophon-wrap">
+    <h3>Fontes e Documentos</h3>
+    <div class="biblio-grid">
+      <div class="biblio-cat"><b>Documentos oficiais</b>TSE — Eleições anteriores (tse.jus.br) · Decisão do min. Kassio Nunes Marques (13/08/2026) · Código Penal, art. 313-A · Registro partidário do Missão (TSE, 04/11/2025)</div>
+      <div class="biblio-cat"><b>Pesquisas eleitorais</b>Palver (ago/2026) · BTG/Nexus (ago/2026) · PoderData (ago/2026) · Genial/Quaest (ago/2026)</div>
+      <div class="biblio-cat"><b>Pesquisa acadêmica</b>SciELO/Opinião Pública · Cesop/Unicamp (5 artigos sobre polarização PT×PSDB)</div>
+      <div class="biblio-cat"><b>Entrevistas &amp; vídeos (pendentes de transcrição)</b>Flow Podcast #472, Flow News #027 e #050 · Playlist Brasil Paralelo "Teatro das Tesouras"</div>
+      <div class="biblio-cat"><b>Matérias jornalísticas</b>CNN Brasil · Gazeta do Povo · Revista Oeste · Brasil de Fato · The Intercept Brasil · O Tempo · Jota · Agência Pública · InfoMoney · Terra · NSC Total · ND Mais · e outras (lista completa em <code>research/06-banco-fontes-final.md</code>)</div>
+      <div class="biblio-cat"><b>Imagens</b>Nenhuma fotografia foi licenciada para este projeto. Todas as 20 imagens descritas no manuscrito permanecem marcadas <code>[IMAGEM A LICENCIAR]</code> — ver lista completa e briefs em <code>research/07-imagens-a-licenciar.md</code>.</div>
+    </div>
+
+    <h3>Status desta edição</h3>
+    <p class="small">Dossiê de 80 fontes catalogadas · pesquisa consolidada em 25/08/2026 · manuscrito completo (Capítulos 1–20) · seis itens de alta prioridade em checagem antes de qualquer publicação final (ver <code>research/08-fact-check-pendencias.md</code>).</p>
+    <div class="flags">
+      <span class="flag">Data da fala "traíra tem de morrer" — em checagem</span>
+      <span class="flag">Identidade do responsável pela filiação — não divulgada</span>
+      <span class="flag">Fichas técnicas das pesquisas — em checagem</span>
+      <span class="flag">Transcrição de vídeos com timestamp — pendente</span>
+    </div>
+    <p class="small" style="margin-top:1.6rem;">Metodologia completa (fato / interpretação / hipótese) em <code>research/00-metodologia.md</code>. Repositório: <a href="https://github.com/fransimas2502-sudo/Repositor">github.com/fransimas2502-sudo/Repositor</a>, branch <code>claude/teatro-tesouras-renan-santos-bmj1dn</code>.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tocBtn = document.getElementById('tocOpen');
+  var tocClose = document.getElementById('tocClose');
+  var tocDrawer = document.getElementById('tocDrawer');
+  function openToc(){ tocDrawer.classList.add('open'); tocClose.focus(); }
+  function closeToc(){ tocDrawer.classList.remove('open'); tocBtn.focus(); }
+  tocBtn && tocBtn.addEventListener('click', openToc);
+  tocClose && tocClose.addEventListener('click', closeToc);
+  tocDrawer && tocDrawer.addEventListener('click', function(e){ if(e.target === tocDrawer) closeToc(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && tocDrawer.classList.contains('open')) closeToc(); });
+  tocDrawer && tocDrawer.querySelectorAll('.toc-link').forEach(function(a){ a.addEventListener('click', closeToc); });
+
+  var bar = document.getElementById('progressBar');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop;
+    var height = h.scrollHeight - h.clientHeight;
+    var pct = height > 0 ? (scrolled / height) * 100 : 0;
+    if(bar) bar.style.width = pct + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
