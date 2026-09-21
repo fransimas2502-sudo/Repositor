@@ -1,0 +1,475 @@
+<!-- ============================================================
+  VSL GC V4 (ESPANHOL) · US$ 17 · botao em 7m49 · VERSAO SYSTEME.IO
+  ============================================================
+  COMO USAR NO SYSTEME.IO (Richart):
+  1) Crie a pagina com UMA secao e adicione UM elemento
+     "HTML/Codigo personalizado".
+  2) Cole este arquivo INTEIRO dentro do elemento (tudo de uma vez).
+  3) Nas configuracoes da pagina/secao: fundo #07070B e, se der,
+     paddings da secao em 0 (a pagina ja se protege sozinha, isso
+     e' so acabamento).
+  4) LINK DO CHECKOUT (dolar): JA APLICADO no GC_CONFIG
+     (https://lucianojosesimas.systeme.io/checkout-dolar).
+     Pra trocar no futuro, edite CHECKOUT_URL perto do fim do arquivo.
+  5) TEMPO DO BOTAO: OFFER_VIDEO_SECONDS (segundos de VIDEO, hoje
+     469 = 7m49). Sincroniza pelo currentTime do player VTurb, entao
+     Turbo 1.1x/1.2x e "continuar assistindo" nao atrapalham.
+     O relogio da pagina fica so como rede de seguranca (FALLBACK).
+     ATENCAO: esse numero foi calibrado pro video antigo. Com a VSL
+     nova (vid-6aa1f26995b4762eee3f6315), reveja em que segundo a
+     oferta e' apresentada na fala e ajuste este valor.
+  6) PIXEL UTMIFY: bloco marcado logo abaixo. Regra de Initiate
+     Checkout na Utmify: classe do botao = gc-btn
+  7) MODO CONFERENCIA: abra a pagina publicada com ?cta=1 no fim
+     da URL pra ver a oferta na hora, sem esperar o video.
+  8) RASTREIO VTURB (cliques + vendas):
+     · O botao tem a classe smartplayer-click-event e recebe o link
+       real do checkout no href, entao o VTurb conta o clique e
+       injeta a chave de conversao (?src=...) sozinho.
+     · Pra VENDA aparecer no VTurb (Conversoes/Receita), falta uma
+       config fora do HTML: no VTurb, va em Configuracoes >
+       Rastreamento de Conversoes > Adicionar plataforma > Systeme,
+       escolha um parametro livre e copie a URL do webhook. Depois,
+       no systeme.io: Configuracoes > Webhooks > Criar, cole a URL,
+       crie um segredo qualquer, marque o evento "Nova Venda" e
+       salve. Sem esse webhook a venda nao chega no VTurb.
+  ============================================================ -->
+
+<!-- ===== VTURB · CODIGO DE VELOCIDADE (pode ficar aqui ou no cabecalho da pagina) ===== -->
+<script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+<link rel="preload" href="https://scripts.converteai.net/fcbabd70-def9-42b6-94f3-0ed1b38fb8d4/players/6aa1f26995b4762eee3f6315/v4/player.js" as="script">
+<link rel="preconnect" href="https://scripts.converteai.net">
+<link rel="preconnect" href="https://cdn.converteai.net">
+<link rel="dns-prefetch" href="https://images.converteai.net">
+<!-- ===== FIM VTURB VELOCIDADE ===== -->
+
+<!-- ============================================================ -->
+<!-- PIXEL UTMIFY: cole o script do seu pixel AQUI (opcional)     -->
+<!-- Regra de IC na Utmify: clique em elemento com classe gc-btn  -->
+<!-- ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* protege a pagina inteira contra fundo/margens do systeme.io */
+  html, body{
+    background:#07070B !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  #gc-page{
+    --bg:#07070B;
+    --bg-2:#0C0C13;
+    --ink:#F5F2ED;
+    --muted:#A79FB2;
+    --red:#FF1F3E;
+    --red-2:#C40E2E;
+    --line:rgba(255,255,255,.08);
+    --pad:20px;
+
+    /* breakout: ocupa a tela inteira mesmo dentro do container do systeme.io */
+    position:relative;
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  :where(#gc-page) *, :where(#gc-page){margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  /* fundo premium: brilho + grao, dentro do proprio bloco */
+  .gc-bg-glow{
+    position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(640px 380px at 50% 90px, rgba(255,31,62,.16), transparent 70%),
+      radial-gradient(540px 320px at 50% calc(100% - 90px), rgba(196,14,46,.07), transparent 72%);
+  }
+  .gc-bg-grain{
+    position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  }
+  #gc-page > *:not(.gc-bg-glow):not(.gc-bg-grain){position:relative;z-index:1}
+
+  .gc-wrap{width:100%;max-width:680px;margin:0 auto;padding:0 var(--pad)}
+
+  /* ---------- topo ---------- */
+  .gc-top{padding:26px var(--pad) 14px;text-align:center}
+  .gc-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Sora',sans-serif;font-size:11px;font-weight:700;
+    letter-spacing:.16em;color:#FFD9DE;text-transform:uppercase;
+    border:1px solid rgba(255,31,62,.35);border-radius:999px;
+    padding:8px 14px;background:rgba(255,31,62,.07);
+  }
+  .gc-dot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:gcPulseDot 1.6s infinite;flex:none}
+  @keyframes gcPulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+
+  /* ---------- headline piramide (auto ajuste por linha) ---------- */
+  .gc-hl{width:100%;max-width:640px;margin:14px auto 0;opacity:0}
+  .gc-hl.ready{opacity:1;transition:opacity .35s ease}
+  .gc-hl-line{
+    display:block;white-space:nowrap;text-align:center;
+    font-family:'Sora',sans-serif;font-weight:800;line-height:1.1;
+    letter-spacing:.005em;text-transform:uppercase;color:var(--ink);
+  }
+  .gc-hl-3{
+    background:linear-gradient(100deg,#FF4D66 8%,var(--red) 45%,#FF7A4D 96%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    padding-bottom:.08em;
+  }
+  .gc-sub{
+    max-width:520px;margin:14px auto 0;text-align:center;
+    color:var(--muted);font-size:15px;line-height:1.6;
+  }
+  .gc-sub b{color:var(--ink);font-weight:600}
+
+  /* ---------- video protagonista ---------- */
+  .gc-video-zone{margin-top:22px}
+  .gc-video-frame{width:100%}
+  #gc-page vturb-smartplayer{display:block!important;width:100%!important;max-width:none!important;margin:0 auto!important}
+  .gc-under-video{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:14px;padding:0 var(--pad);text-align:center;
+    color:#8D8598;font-size:12.5px;line-height:1.5;
+  }
+  .gc-under-video svg{flex:none}
+
+  /* desktop: moldura premium */
+  @media (min-width:768px){
+    .gc-top{padding-top:38px}
+    .gc-sub{font-size:16px}
+    .gc-video-zone{display:flex;justify-content:center;margin-top:30px}
+    .gc-video-frame{
+      width:auto;max-width:440px;padding:1px;border-radius:22px;
+      background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,31,62,.45) 40%,rgba(255,255,255,.05) 80%);
+      box-shadow:0 30px 80px rgba(255,31,62,.14),0 10px 40px rgba(0,0,0,.6);
+    }
+    .gc-video-frame-in{background:var(--bg-2);border-radius:21px;padding:12px}
+    .gc-video-holder{border-radius:14px;overflow:hidden;background:#000}
+    #gc-page vturb-smartplayer{width:400px!important}
+    .gc-under-video{font-size:13px}
+  }
+  @media (max-width:767px){
+    .gc-video-frame-in{padding:0}
+    .gc-video-holder{border-radius:0}
+  }
+
+  /* ---------- oferta (escondida ate 7m49 do video) ---------- */
+  .gc-oferta{display:none}
+  .gc-oferta.on{display:block;animation:gcUp .55s ease both}
+  @keyframes gcUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .gc-oferta-inner{padding:34px 0 8px;text-align:center}
+  .gc-oferta-pill{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Sora',sans-serif;font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:#FFD9DE;
+    border:1px solid rgba(255,31,62,.4);border-radius:999px;
+    padding:8px 14px;background:rgba(255,31,62,.09);
+  }
+  .gc-oferta-pill .gc-dot{animation-duration:1.2s}
+  .gc-price-line{margin-top:16px;font-size:15px;color:var(--muted)}
+  .gc-price-line s{opacity:.75}
+  .gc-price-now{
+    font-family:'Sora',sans-serif;font-weight:800;font-size:30px;
+    margin-top:2px;letter-spacing:.01em;color:var(--ink);
+  }
+  .gc-price-now small{font-size:14px;font-weight:600;color:var(--muted);letter-spacing:0}
+
+  #gc-page .gc-btn{
+    display:flex;align-items:center;justify-content:center;
+    width:100%;min-height:66px;margin:18px auto 0;max-width:520px;
+    padding:18px 22px;border:0;border-radius:16px;cursor:pointer;
+    font-family:'Sora',sans-serif;font-weight:800;
+    font-size:clamp(16px,4.8vw,21px);letter-spacing:.02em;line-height:1.25;
+    text-transform:uppercase;text-decoration:none;color:#fff;
+    background:linear-gradient(180deg,#FF3B55 0%,var(--red-2) 78%,#A50B26 100%);
+    box-shadow:0 14px 38px rgba(255,31,62,.36),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.28);
+    animation:gcBtnPulse 1.9s ease-in-out infinite;
+    transition:transform .15s ease,filter .15s ease;
+    user-select:none;
+  }
+  #gc-page .gc-btn:active{transform:scale(.98)}
+  #gc-page .gc-btn.is-wait{pointer-events:none;filter:saturate(.65) brightness(.85);animation:none}
+  @keyframes gcBtnPulse{
+    0%,100%{transform:scale(1);box-shadow:0 14px 38px rgba(255,31,62,.36),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.28)}
+    50%{transform:scale(1.022);box-shadow:0 18px 52px rgba(255,31,62,.52),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.28)}
+  }
+  .gc-btn-micro{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    margin-top:12px;color:#8D8598;font-size:12.5px;
+  }
+
+  .gc-garantia{
+    display:flex;gap:14px;align-items:flex-start;text-align:left;
+    max-width:520px;margin:26px auto 0;padding:18px;
+    border:1px solid var(--line);border-radius:16px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  }
+  .gc-garantia .gc-ic{
+    flex:none;width:44px;height:44px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(255,31,62,.1);border:1px solid rgba(255,31,62,.3);
+  }
+  .gc-garantia h3{font-family:'Sora',sans-serif;font-size:15.5px;font-weight:700;letter-spacing:.01em;color:var(--ink)}
+  .gc-garantia p{margin-top:5px;color:var(--muted);font-size:13.5px;line-height:1.6}
+
+  .gc-selos{
+    display:flex;justify-content:center;flex-wrap:wrap;gap:8px;
+    max-width:520px;margin:16px auto 0;
+  }
+  .gc-selo{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:600;color:#B8B0C2;
+    border:1px solid var(--line);border-radius:999px;
+    padding:8px 13px;background:rgba(255,255,255,.02);
+  }
+  .gc-selo svg{flex:none}
+
+  /* ---------- rodape ---------- */
+  .gc-footer{
+    margin-top:56px;padding:26px var(--pad) 40px;
+    border-top:1px solid var(--line);text-align:center;
+  }
+  .gc-footer p{color:#6F687B;font-size:11.5px;line-height:1.7;max-width:560px;margin:0 auto 10px}
+  .gc-footer .gc-brand{font-family:'Sora',sans-serif;font-weight:700;color:#8D8598;font-size:12px;letter-spacing:.06em}
+
+  @media (min-width:768px){
+    .gc-oferta-inner{padding-top:42px}
+  }
+</style>
+
+<div id="gc-page">
+  <div class="gc-bg-glow"></div>
+  <div class="gc-bg-grain"></div>
+
+  <!-- topo -->
+  <header class="gc-top">
+    <span class="gc-badge"><span class="gc-dot"></span> Clase gratuita · Solo mayores de 18</span>
+    <h1 class="gc-hl" id="hl">
+      <span class="gc-hl-line">EL GATILLO FÍSICO</span>
+      <span class="gc-hl-line">QUE HACE A CUALQUIER MUJER</span>
+      <span class="gc-hl-line gc-hl-3">IMPLORAR POR EL ORGASMO MÁXIMO</span>
+    </h1>
+    <p class="gc-sub">En solo <b>50 segundos</b>, demostrado en vivo delante de tu pantalla. La clase es <b>100% explícita</b>: mírala en privado.</p>
+  </header>
+
+  <!-- video protagonista -->
+  <section class="gc-video-zone">
+    <div class="gc-video-frame">
+      <div class="gc-video-frame-in">
+        <div class="gc-video-holder">
+          <!-- ===== EMBED VTURB (nao mexer) ===== -->
+          <vturb-smartplayer id="vid-6aa1f26995b4762eee3f6315" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 133.33333333333331% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
+          <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/fcbabd70-def9-42b6-94f3-0ed1b38fb8d4/players/6aa1f26995b4762eee3f6315/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
+          <!-- ===== FIM EMBED VTURB ===== -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gc-under-video">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="#FF6A80" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>El video contiene demostraciones reales y explícitas. Usa audífonos.</span>
+  </div>
+
+  <!-- oferta: aparece quando o video chega em 7m49 -->
+  <section class="gc-oferta" id="gc-oferta">
+    <div class="gc-wrap gc-oferta-inner">
+      <span class="gc-oferta-pill"><span class="gc-dot"></span> Oferta liberada · Válida solo por 24 horas</span>
+
+      <p class="gc-price-line">Acceso completo + bonos (valor real: <s>más de US$ 1.000</s>)</p>
+      <p class="gc-price-now">Hoy: US$ 17 <small>· pago único</small></p>
+
+      <a href="#!" class="gc-btn smartplayer-click-event" id="gc-btn" role="button">QUIERO VOLVERLA ADICTA A MÍ</a>
+
+      <p class="gc-btn-micro">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2.5" stroke="#8D8598" stroke-width="1.8"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="#8D8598" stroke-width="1.8"/></svg>
+        Pago 100% seguro · Acceso inmediato en tu celular
+      </p>
+
+      <div class="gc-garantia">
+        <span class="gc-ic">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.4v5.2c0 4.9 3.2 8.4 7.5 10.9 4.3-2.5 7.5-6 7.5-10.9V5.4L12 2.5Z" stroke="#FF4D66" stroke-width="1.7" stroke-linejoin="round"/><path d="m8.8 11.8 2.2 2.2 4.2-4.5" stroke="#FF4D66" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <h3>Garantía blindada de 90 días</h3>
+          <p>Prueba todo el método durante 90 días. Si sigues el paso a paso y ella no llega como viste en la clase, escríbeme un correo y te devuelvo cada centavo. Sin preguntas, sin rodeos.</p>
+        </div>
+      </div>
+
+      <div class="gc-selos">
+        <span class="gc-selo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2.5" stroke="#B8B0C2" stroke-width="1.8"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="#B8B0C2" stroke-width="1.8"/></svg>
+          Compra segura
+        </span>
+        <span class="gc-selo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M13 2 4.5 13.5H11L9.8 22 19 9.5h-6.5L13 2Z" stroke="#B8B0C2" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Acceso inmediato
+        </span>
+        <span class="gc-selo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.4v5.2c0 4.9 3.2 8.4 7.5 10.9 4.3-2.5 7.5-6 7.5-10.9V5.4L12 2.5Z" stroke="#B8B0C2" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Garantía de 90 días
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="gc-footer">
+    <p>Contenido exclusivo para mayores de 18 años. Material educativo para adultos: los resultados pueden variar de persona a persona y este contenido no sustituye acompañamiento médico o terapéutico.</p>
+    <p>Este sitio no forma parte de Facebook, Instagram, Google o YouTube, ni está avalado por ellos. Facebook e Instagram son marcas de Meta Platforms, Inc. YouTube es una marca de Google LLC.</p>
+    <p class="gc-brand">© 2026 · Todos los derechos reservados</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     CONFIG (Richart edita aqui)
+     ============================================================ */
+  var GC_CONFIG = {
+    CHECKOUT_URL: "https://lucianojosesimas.systeme.io/checkout-dolar",  /* link do checkout em dolar */
+    OFFER_VIDEO_SECONDS: 469,   /* 7m49 · tempo do VIDEO (currentTime do player) */
+    FALLBACK_PAGE_SECONDS: 620, /* rede de seguranca pelo relogio da pagina */
+    REDIRECT_DELAY_MS: 180      /* atraso pro pixel (Utmify) registrar o IC */
+  };
+  window.GC_CONFIG = GC_CONFIG;
+
+  /* ---------- headline piramide: cada linha preenche a largura sem quebrar ---------- */
+  function fitHeadline(){
+    var box = document.getElementById('hl');
+    if(!box) return;
+    var w = box.clientWidth;
+    if(!w) return;
+    var lines = box.querySelectorAll('.gc-hl-line');
+    for(var i=0;i<lines.length;i++){
+      var line = lines[i], min = 12, max = 120, mid;
+      for(var k=0;k<14;k++){
+        mid = (min + max) / 2;
+        line.style.fontSize = mid + 'px';
+        if(line.scrollWidth > w){ max = mid; } else { min = mid; }
+      }
+      line.style.fontSize = (Math.floor(min * 10) / 10) + 'px';
+    }
+    box.classList.add('ready');
+  }
+  function fitSoon(){ fitHeadline(); setTimeout(fitHeadline, 120); }
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitSoon); }
+  window.addEventListener('load', fitSoon);
+  window.addEventListener('resize', fitHeadline);
+  window.addEventListener('orientationchange', function(){ setTimeout(fitHeadline, 180); });
+  fitSoon();
+
+  /* ---------- tempo do video (VTurb smartplayer, com fallbacks) ---------- */
+  function getVideoTime(){
+    try{
+      if(window.smartplayer && window.smartplayer.instances && window.smartplayer.instances.length){
+        var inst = window.smartplayer.instances[0];
+        if(inst && inst.video && typeof inst.video.currentTime === 'number' && inst.video.currentTime > 0){
+          return inst.video.currentTime;
+        }
+        if(inst && typeof inst.getCurrentTime === 'function'){
+          var t = inst.getCurrentTime();
+          if(typeof t === 'number' && t > 0) return t;
+        }
+      }
+    }catch(e){}
+    try{
+      var hosts = document.querySelectorAll('vturb-smartplayer');
+      for(var i=0;i<hosts.length;i++){
+        var v = hosts[i].querySelector('video');
+        if(!v && hosts[i].shadowRoot) v = hosts[i].shadowRoot.querySelector('video');
+        if(v && v.currentTime > 0) return v.currentTime;
+      }
+    }catch(e){}
+    try{
+      var vids = document.getElementsByTagName('video');
+      for(var j=0;j<vids.length;j++){
+        if(vids[j].currentTime > 0) return vids[j].currentTime;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  /* ---------- revelar oferta ---------- */
+  var revealed = false, pollTimer = null;
+  function showOffer(){
+    if(revealed) return;
+    revealed = true;
+    var of = document.getElementById('gc-oferta');
+    if(of) of.classList.add('on');
+    if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+    try{ sessionStorage.setItem('gc_cta_ok','1'); }catch(e){}
+  }
+
+  /* modo conferencia ?cta=1 */
+  var search = window.location.search || '';
+  if(/[?&]cta=1(&|$)/.test(search)){ showOffer(); }
+
+  /* ja tinha liberado antes (refresh / continuar assistindo) */
+  try{ if(sessionStorage.getItem('gc_cta_ok') === '1'){ showOffer(); } }catch(e){}
+
+  /* sincronia principal: tempo do VIDEO */
+  if(!revealed){
+    pollTimer = setInterval(function(){
+      var t = getVideoTime();
+      if(t !== null && t >= GC_CONFIG.OFFER_VIDEO_SECONDS){ showOffer(); }
+    }, 500);
+  }
+
+  /* rede de seguranca: relogio da pagina */
+  setTimeout(showOffer, GC_CONFIG.FALLBACK_PAGE_SECONDS * 1000);
+
+  /* ---------- clique: trava anti duplo clique + atraso pro rastreio ---------- */
+  function buildCheckoutUrl(){
+    /* base = href ATUAL do botao: e' ali que o VTurb injeta a chave de conversao (?src=...) */
+    var base = '';
+    try{ base = btn ? (btn.getAttribute('href') || '') : ''; }catch(e){}
+    if(!base || base.charAt(0) === '#'){ base = GC_CONFIG.CHECKOUT_URL; }
+    try{
+      var qs = (window.location.search || '').replace(/^\?/, '');
+      if(!qs) return base;
+      var keep = [];
+      var parts = qs.split('&');
+      for(var i=0;i<parts.length;i++){
+        var p = parts[i];
+        if(!p) continue;
+        var key = p.split('=')[0];
+        if(key === 'cta') continue;
+        /* nao duplica parametro que ja esta no href (ex.: src injetado pelo VTurb) */
+        if(base.indexOf('?' + key + '=') > -1 || base.indexOf('&' + key + '=') > -1) continue;
+        keep.push(p);
+      }
+      if(!keep.length) return base;
+      return base + (base.indexOf('?') > -1 ? '&' : '?') + keep.join('&');
+    }catch(e){ return base; }
+  }
+  function gcGo(url){
+    if(window.__GC_TEST__){ window.__GC_LAST_REDIRECT = url; return; }
+    window.location.href = url;
+  }
+  var clicked = false;
+  var btn = document.getElementById('gc-btn');
+  if(btn){
+    /* link real no href: o VTurb reconhece o botao de saida, conta o clique e injeta a chave de conversao */
+    try{ btn.setAttribute('href', GC_CONFIG.CHECKOUT_URL); }catch(e){}
+    btn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      if(clicked) return;
+      clicked = true;
+      btn.classList.add('is-wait');
+      setTimeout(function(){ gcGo(buildCheckoutUrl()); }, GC_CONFIG.REDIRECT_DELAY_MS);
+    });
+  }
+})();
+</script>
